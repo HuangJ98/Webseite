@@ -5,7 +5,4 @@ pages:
   script:
     - bundle install
     - bundle exec jekyll build -d public
-  artifacts:
-    path:
-      - public
   pages: true
