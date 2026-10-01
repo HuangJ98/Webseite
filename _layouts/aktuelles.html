@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ page.title }} | EditA</title>
+
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+
+<body>
+
+<header class="site-header">
+
+    <nav class="navbar">
+
+        <div class="site-container">
+
+            <a class="navbar-logo" href="{{ '/' | relative_url }}">
+                <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="EditA">
+            </a>
+
+            <div class="navbar-links">
+
+                <a href="{{ '/aktuelles/' | relative_url }}"
+                   class="{% if page.url == '/aktuelles/' %}active{% endif %}">
+                    Aktuelles
+                </a>
+
+                <a href="{{ '/kurzdarstellung/' | relative_url }}"
+                   class="{% if page.url == '/kurzdarstellung/' %}active{% endif %}">
+                    Kurzdarstellung
+                </a>
+
+                <a href="{{ '/verbundpartner/' | relative_url }}"
+                   class="{% if page.url == '/verbundpartner/' %}active{% endif %}">
+                    Verbundpartner
+                </a>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+</header>
+
+<main class="site-content">
+    <div class="site-container">
+        {{ content }}
+    </div>
+</main>
+
+
+<footer>
+    <div class="site-container">
+        <a href="{{ '/impressum/' | relative_url }}">Impressum</a>
+    </div>
+</footer>
+
+</body>

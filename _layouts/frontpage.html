@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ page.title }} | EditA</title>
+
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+
+<body>
+
+<header class="site-header">
+
+    <nav class="navbar">
+
+        <div class="site-container">
+
+            <a class="navbar-logo" href="{{ '/' | relative_url }}">
+                <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="EditA">
+            </a>
+
+            <div class="navbar-links">
+
+                <a href="{{ '/aktuelles/' | relative_url }}"
+                   class="{% if page.url == '/aktuelles/' %}active{% endif %}">
+                    Aktuelles
+                </a>
+
+                <a href="{{ '/kurzdarstellung/' | relative_url }}"
+                   class="{% if page.url == '/kurzdarstellung/' %}active{% endif %}">
+                    Kurzdarstellung
+                </a>
+
+                <a href="{{ '/verbundpartner/' | relative_url }}"
+                   class="{% if page.url == '/verbundpartner/' %}active{% endif %}">
+                    Verbundpartner
+                </a>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+<!-- BILD -->
+
+<div class="hero-image">
+
+    <img src="{{ '/assets/images/platzhalter.jpg' | relative_url }}" alt="">
+
+    <div class="hero-content">
+        <div class="site-container">
+
+            <div class="hero-text">
+
+                <p class="hero-label">{{ page.hero_label }}</p>
+
+                <h1>{{ page.hero_title }}</h1>
+
+                <p class="hero-description">
+                    {{ page.hero_description }}
+                </p>
+
+
+                <a class="hero-button" href="{{ '/kurzdarstellung/' | relative_url }}">
+                    Mehr über EditA
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<section class="topic-section">
+
+    <div class="site-container">
+
+        <h2 class="topic-title">
+            {{ page.topic_title }}
+        </h2>
+
+
+        <div class="topic-columns">
+
+            <div class="topic-column">
+                <h3>
+                    {{ page.column_1_title }}
+                </h3>
+
+                <p>
+                    {{ page.column_1_text }}
+                </p>
+            </div>
+
+
+            <div class="topic-column">
+                <h3>
+                    {{ page.column_2_title }}
+                </h3>
+
+                <p>
+                    {{ page.column_2_text }}
+                </p>
+            </div>
+
+
+            <div class="topic-column">
+                <h3>
+                    {{ page.column_3_title }}
+                </h3>
+
+                <p>
+                    {{ page.column_3_text }}
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+
+
+<!-- INHALT -->
+
+<main class="site-content">
+    <div class="site-container">
+        {{ content }}
+    </div>
+</main>
+
+
+<footer>
+    <div class="site-container">
+        <a href="{{ '/impressum/' | relative_url }}">Impressum</a>
+    </div>
+</footer>
+
+</body>
+</html>
