@@ -2,6 +2,11 @@
 layout: ergebnisse
 title: Ergebnisse
 permalink: /ergebnisse/
+
+# Blättern: so viele Einträge pro Seite, danach kommt Seite 2, 3 …
+seiten:
+  quelle: ergebnisse
+  pro_seite: 10
 ---
 
 <!--

@@ -21,7 +21,7 @@
                 </a>
 
                 <a href="{{ '/ergebnisse/' | relative_url }}"
-                   class="{% if page.url == '/ergebnisse/' %}active{% endif %}">
+                   class="{% if page.url contains '/ergebnisse/' %}active{% endif %}">
                     Ergebnisse
                 </a>
 

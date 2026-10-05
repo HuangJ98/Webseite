@@ -16,14 +16,14 @@
 </section>
 
 
-<!-- DOWNLOADS (automatisch aus assets/ergebnisse/, neueste zuerst nach Datum im Dateinamen) -->
+<!-- DOWNLOADS (automatisch aus assets/ergebnisse/, neueste zuerst nach Datum im Dateinamen, 10 pro Seite) -->
 
 <main class="page-content ergebnisse-content">
     <div class="site-container">
 
         {{ content }}
 
-        {% if site.data.ergebnisse.size > 0 %}
+        {% if page.seiten.eintraege.size > 0 %}
 
         <table class="file-table">
 
@@ -37,7 +37,7 @@
             </thead>
 
             <tbody>
-                {% for datei in site.data.ergebnisse %}
+                {% for datei in page.seiten.eintraege %}
                 <tr>
                     <td class="file-name" data-label="Name">
                         <a href="{{ datei.url | relative_url }}" download>{{ datei.name }}</a>
@@ -54,6 +54,8 @@
             </tbody>
 
         </table>
+
+        {% include seiten-navigation.html %}
 
         {% else %}
 

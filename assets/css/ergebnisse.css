@@ -42,6 +42,11 @@
     white-space: nowrap;
 }
 
+/* Keine Linie unter der letzten Datei */
+.file-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
 /* Der Name darf umbrechen, alles andere bleibt einzeilig */
 .file-table td.file-name {
     width: 100%;
@@ -114,6 +119,10 @@
     .file-table tr {
         padding: 18px 0;
         border-bottom: 1px solid var(--color-border);
+    }
+
+    .file-table tr:last-child {
+        border-bottom: 0;
     }
 
     .file-table td {

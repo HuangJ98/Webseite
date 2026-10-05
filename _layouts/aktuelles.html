@@ -16,18 +16,16 @@
 </section>
 
 
-<!-- BEITRÄGE (automatisch aus _aktuelles/, neueste zuerst) -->
+<!-- BEITRÄGE (automatisch aus _aktuelles/, neueste zuerst, 5 pro Seite) -->
 
 <main class="page-content aktuelles-content">
     <div class="site-container">
 
         {{ content }}
 
-        {% assign beitraege = site.aktuelles | sort: 'date' | reverse %}
-
         <div class="news-list">
 
-            {% for beitrag in beitraege %}
+            {% for beitrag in page.seiten.eintraege %}
             <article class="news-item">
 
                 <a class="news-image" href="{{ beitrag.url | relative_url }}" tabindex="-1" aria-hidden="true">
@@ -62,6 +60,8 @@
             {% endfor %}
 
         </div>
+
+        {% include seiten-navigation.html %}
 
     </div>
 </main>

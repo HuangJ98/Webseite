@@ -297,6 +297,86 @@ body {
 
 
 /* =========================================================
+   BLÄTTERN (Aktuelles, Ergebnisse)
+   ← Neuere Einträge   1 2 3   Ältere Einträge →
+   ========================================================= */
+
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 24px;
+
+    margin-top: 40px;
+    font-size: 15px;
+}
+
+/* So breit wie die Liste darüber */
+.page-content .site-container > .pagination {
+    max-width: 960px;
+}
+
+.pagination a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.pagination-step {
+    font-weight: 500;
+}
+
+.pagination a.pagination-step:hover {
+    text-decoration: underline;
+}
+
+/* Auf der ersten/letzten Seite ausgegraut */
+.pagination-step.is-disabled {
+    color: var(--color-border);
+}
+
+.pagination-numbers {
+    display: flex;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pagination-numbers a,
+.pagination-numbers .is-current {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 8px;
+}
+
+.pagination-numbers a:hover {
+    background: var(--color-bg-light);
+}
+
+.pagination-numbers .is-current {
+    background: var(--color-primary);
+    color: #ffffff;
+}
+
+@media (max-width: 600px) {
+    .pagination {
+        justify-content: center;
+    }
+
+    /* Zahlen oben, Pfeile darunter */
+    .pagination-numbers {
+        order: -1;
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+
+/* =========================================================
    6. FOOTER
    Oben: Logos links, Bild + Text rechts
    Unten: Kontakt links, Über diese Website rechts

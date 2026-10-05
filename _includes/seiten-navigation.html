@@ -1,0 +1,44 @@
+{% comment %}
+  Blättern unter einer Liste. Erscheint nur, wenn es mehr als eine Seite gibt.
+  Die Daten kommen aus _plugins/seiten.rb (page.seiten).
+{% endcomment %}
+
+{% assign s = page.seiten %}
+
+{% if s.anzahl_seiten > 1 %}
+<nav class="pagination" aria-label="Seiten">
+
+    {% if s.zurueck_url %}
+    <a class="pagination-step" href="{{ s.zurueck_url | relative_url }}">
+        <span aria-hidden="true">←</span> Neuere Einträge
+    </a>
+    {% else %}
+    <span class="pagination-step is-disabled" aria-hidden="true">
+        <span>←</span> Neuere Einträge
+    </span>
+    {% endif %}
+
+    <ol class="pagination-numbers">
+        {% for url in s.alle_urls %}
+        <li>
+            {% if forloop.index == s.seite %}
+            <span class="is-current" aria-current="page">{{ forloop.index }}</span>
+            {% else %}
+            <a href="{{ url | relative_url }}" aria-label="Seite {{ forloop.index }}">{{ forloop.index }}</a>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ol>
+
+    {% if s.weiter_url %}
+    <a class="pagination-step" href="{{ s.weiter_url | relative_url }}">
+        Ältere Einträge <span aria-hidden="true">→</span>
+    </a>
+    {% else %}
+    <span class="pagination-step is-disabled" aria-hidden="true">
+        Ältere Einträge <span>→</span>
+    </span>
+    {% endif %}
+
+</nav>
+{% endif %}
