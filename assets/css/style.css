@@ -121,15 +121,32 @@ body {
 .navbar-links a {
     position: relative;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
     height: 100%;
 
     color: var(--color-text-dark);
-    font-size: 14px;
+    font-size: 16px;
     text-decoration: none;
     white-space: nowrap;
 
     transition: color 0.2s ease;
+}
+
+/* Hover: fett */
+.navbar-links a:hover {
+    font-weight: 700;
+}
+
+/* Unsichtbar die Breite der fetten Schrift reservieren,
+   damit die Links beim Hover nicht verrutschen
+   (Text kommt aus data-label im HTML) */
+.navbar-links a::before {
+    content: attr(data-label);
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    font-weight: 700;
 }
 
 /* Balken unter dem Link */
@@ -163,7 +180,7 @@ body {
     }
 
     .navbar-links a {
-        font-size: 13px;
+        font-size: 15px;
     }
 }
 

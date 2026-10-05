@@ -11,16 +11,19 @@
             <div class="navbar-links">
 
                 <a href="{{ '/aktuelles/' | relative_url }}"
+                   data-label="Aktuelles"
                    class="{% if page.url contains '/aktuelles/' %}active{% endif %}">
                     Aktuelles
                 </a>
 
                 <a href="{{ '/kurzdarstellung/' | relative_url }}"
+                   data-label="Kurzdarstellung"
                    class="{% if page.url == '/kurzdarstellung/' %}active{% endif %}">
                     Kurzdarstellung
                 </a>
 
                 <a href="{{ '/ergebnisse/' | relative_url }}"
+                   data-label="Ergebnisse"
                    class="{% if page.url contains '/ergebnisse/' %}active{% endif %}">
                     Ergebnisse
                 </a>
