@@ -21,20 +21,33 @@
 }
 
 
-/* Datum */
+/* Datum (zwischen Bild und Text) */
 .beitrag-date {
     display: block;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 
     color: var(--color-text-muted);
     font-size: 14px;
 }
 
 
-/* Bild über dem Text */
+/* Bild direkt unter dem Titel: so breit wie die Linie unter dem Titel,
+   als breites Rechteck zugeschnitten */
+.beitrag-content .site-container > .beitrag-image {
+    max-width: none;
+}
+
 .beitrag-image {
     display: block;
     width: 100%;
-    height: auto;
-    margin-bottom: 32px;
+    aspect-ratio: 21 / 9;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+/* Handy: etwas höher, sonst wird das Bild zu flach */
+@media (max-width: 700px) {
+    .beitrag-image {
+        aspect-ratio: 16 / 9;
+    }
 }

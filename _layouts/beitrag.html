@@ -27,15 +27,16 @@
 <main class="page-content beitrag-content">
     <div class="site-container">
 
-        <time class="beitrag-date" datetime="{{ page.date | date: '%Y-%m-%d' }}">
-            {{ page.date | date: '%d.%m.%Y' }}
-        </time>
-
+        <!-- Bild aus dem Ordner des Beitrags, direkt unter dem Titel -->
         {% if page.image %}
         <img class="beitrag-image"
              src="{{ page.image | relative_url }}"
              alt="{{ page.image_alt }}">
         {% endif %}
+
+        <time class="beitrag-date" datetime="{{ page.date | date: '%Y-%m-%d' }}">
+            {{ page.date | date: '%d.%m.%Y' }}
+        </time>
 
         {{ content }}
 

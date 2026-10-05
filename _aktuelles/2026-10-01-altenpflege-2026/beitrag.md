@@ -1,9 +1,6 @@
 ---
 title: Unterwegs auf der ALTENPFLEGE 2026
-date: 2026-10-01
-
-# Bild für die Übersicht und den Beitrag (ohne Bild erscheint ein Platzhalter)
-# image: /assets/images/aktuelles/altenpflege-2026.jpg
+# Bildbeschreibung (für Screenreader), optional
 # image_alt: Das EditA-Team auf der Messe ALTENPFLEGE 2026
 
 # 1–2 Sätze für die Übersicht auf "Aktuelles"
