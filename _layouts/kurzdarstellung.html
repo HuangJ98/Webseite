@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="de">
+{% include head.html css="kurzdarstellung" %}
+
+<body>
+
+{% include header.html %}
+
+
+<!-- SEITENTITEL -->
+
+<section class="page-header">
+    <div class="site-container">
+        <h1>{{ page.title }}</h1>
+    </div>
+</section>
+
+
+<!-- INHALT -->
+
+<main class="page-content kurzdarstellung-content">
+    <div class="site-container">
+
+        <!-- EINSTIEG: TEXT LINKS, BILD RECHTS -->
+        <div class="intro">
+
+            <p class="intro-text">
+                {{ page.intro_text }}
+            </p>
+
+            {% if page.intro_image %}
+            <img class="intro-image"
+                 src="{{ page.intro_image | relative_url }}"
+                 alt="{{ page.intro_image_alt }}">
+            {% else %}
+            <div class="intro-image intro-image-placeholder">
+                Bild folgt
+            </div>
+            {% endif %}
+
+        </div>
+
+        {{ content }}
+    </div>
+</main>
+
+
+{% include footer.html %}
+
+</body>
+</html>

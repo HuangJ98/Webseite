@@ -1,18 +1,29 @@
 ---
-layout: default
+layout: kurzdarstellung
 title: Kurzdarstellung
 permalink: /kurzdarstellung/
+
+# Einstieg oben: Text links, Bild rechts
+intro_text: >
+  Im Projekt EditA wird auf wissenschaftlich fundierter Grundlage ein
+  Erhebungsinstrument zur Messung der Wirksamkeit digitaler Technologien
+  in der Pflege entwickelt.
+
+# Bild eintragen, sobald es da ist (sonst erscheint ein Platzhalter):
+# intro_image: /assets/images/kurzdarstellung.jpg
+# intro_image_alt: Pflegekraft dokumentiert am Tablet
 ---
 
 Für die ambulante und stationäre langzeitpflegerische Versorgung wurden in den letzten Jahren vielfältig digitale Anwendungen entwickelt und erprobt. Ziel solcher digitalen Anwendungen ist es, beruflich Pflegende zu entlasten, die pflegerische Versorgung zu verbessern und die stärkere Beteiligung der Pflegebedürftigen zu fördern (§ 8 Absatz 3 SGB XI). Bislang mangelt es jedoch an einem kontextsensitiven Erhebungsinstrument, das die Wirkungsmessung und damit die Evaluation digitaler Anwendungen für die Pflegepraxis ermöglicht. Im Projekt EditA wird auf wissenschaftlich fundierter Grundlage ein Erhebungsinstrument zur Messung der Wirksamkeit digitaler Technologien in der Pflege entwickelt. Im Fokus stehen die Wirkungsdimensionen Versorgungsqualität, Arbeitsqualität und Usability. Im Ergebnis wird Pflegeeinrichtungen und -diensten ein praxisnahes Tool zur Verfügung gestellt, um den tatsächlichen Nutzen digitaler Anwendungen in der Arbeits- und Versorgungspraxis ressourcenschonend und systematisch zu bewerten sowie fundierte Entscheidungen für eine nachhaltige, evidenzorientierte Digitalisierung zu unterstützen.
 
-KURZDARSTELLUNG
+## Ausgangslage
+
 Nach der Implementierung digitaler Anwendungen in Pflegeeinrichtungen bleibt oftmals unklar, ob und inwiefern die mit der Implementierung gewünschten Ziele erreicht wurde. Zwar existieren bereits etablierte Fragebögen bzw. Skalen, welche entweder die Versorgungsqualität, Arbeitsqualität oder die Usability von digitalen Anwendungen in der Pflegepraxis fokussieren. Allerdings fehlt ein Instrument, welches diese Dimensionen für eine systematische Evaluation digitaler Anwendungen integriert. Dieses Forschungs- und Praxisdesiderat soll durch EditA geschlossen werden.
 
 Das zu entwickelnde Instrumentenset umfasst a) ein Erhebungsinstrument zur Wirkungsmessung (Fragebogen) digitaler Anwendungen und b) eine Handreichung für Pflegeeinrichtungen/-dienste, welche Orientierungswissen für die Verwendung, Auswertung und Nutzung des Erhebungsinstruments bietet. Damit werden Pflegeeinrichtungen/-dienste in der wirkungsorientierten Evaluation digitaler Anwendungen unterstützt, um Mitarbeitenden und Führungspersonen mehr Orientierung und Steuerungsoptionen im Hinblick auf eine wirkungsorientierte Implementierung digitaler Anwendungen zu ermöglichen.
 
-Methodisch basiert EditA auf einer systematischen Recherche (Scoping Review) des internationalen Forschungsstandes zu Instrumenten der Wirkungsmessung digitaler Anwendungen in der Pflege (Arbeitsqualität, Versorgungsqualität, Usability). Auf Basis der Recherche wird eine Taxonomie zur Beurteilung der Evaluationsinstrumente und Implementierungshilfe entwickelt. Ergänzend werden in vier Einrichtungsfallstudien (zwei ambulante Einrichtung; zwei langzeitstationäre Einrichtung) leitfadengestützte Interviews und ein „Cognitive Walk Through“ mit Nutzer:innen digitaler Technologien durchgeführt. Diese werden um problemzentrierte Interviews mit Funktionsträger:innen in Pflegeeinrichtungen/-diensten ergänzt. Aus den Interviews werden die für die Versorgungs- und Arbeitsqualität sowie Usability relevanten Einflussfaktoren rekonstruiert (Phase 1 Entwicklung).
+Methodisch basiert EditA auf einer systematischen Recherche (Scoping Review) des internationalen Forschungsstandes zu Instrumenten der Wirkungsmessung digitaler Anwendungen in der Pflege (Arbeitsqualität, Versorgungsqualität, Usability). Auf Basis der Recherche wird eine Taxonomie zur Beurteilung der Evaluationsinstrumente und Implementierungshilfe entwickelt. Ergänzend werden in vier Einrichtungsfallstudien (zwei ambulante Einrichtung; zwei langzeitstationäre Einrichtung) leitfadengestützte Interviews und ein „Cognitive Walk Through“ mit Nutzer:innen digitaler Technologien durchgeführt. Diese werden um problemzentrierte Interviews mit Funktionsträger:innen in Pflegeeinrichtungen/-diensten ergänzt. Aus den Interviews werden die für die Versorgungs- und Arbeitsqualität sowie Usability relevanten Einflussfaktoren rekonstruiert **(Phase 1 Entwicklung)**.
 
-Auf dieser Grundlage wird das Erhebungsinstrument entwickelt und auf Validität und Reliabilität geprüft (Phase 2 Validierung). Anschließend erfolgen die Erprobung und Testung des Fragebogeninstruments sowie der Handreichung in und mit der Pflegepraxis (Phase 3 Pilotierung).
+Auf dieser Grundlage wird das Erhebungsinstrument entwickelt und auf Validität und Reliabilität geprüft **(Phase 2 Validierung)**. Anschließend erfolgen die Erprobung und Testung des Fragebogeninstruments sowie der Handreichung in und mit der Pflegepraxis **(Phase 3 Pilotierung)**.
 
-Nach erfolgreicher Validierung und Testung des Instruments sowie der Handreichung ist eine Anbindung der Projektprodukte an das „Kompetenzzentrum Digitalisierung und Pflege“ (§ 125b SGB XI) beim GKV-SV vorgesehen (Phase 4 Nachhaltigkeit). Projektbegleitend werden Expert:innendiskussionen und Fokusgruppen (Instrumentenentwicklung, Pilotierung) durchgeführt.
+Nach erfolgreicher Validierung und Testung des Instruments sowie der Handreichung ist eine Anbindung der Projektprodukte an das „Kompetenzzentrum Digitalisierung und Pflege“ (§ 125b SGB XI) beim GKV-SV vorgesehen **(Phase 4 Nachhaltigkeit)**. Projektbegleitend werden Expert:innendiskussionen und Fokusgruppen (Instrumentenentwicklung, Pilotierung) durchgeführt.

@@ -1,0 +1,40 @@
+/* =========================================================
+   EINZELNER BEITRAG (beitrag.html)
+   ---------------------------------------------------------
+   Wird zusätzlich zu style.css geladen, für jede Datei
+   in _aktuelles/.
+   ========================================================= */
+
+
+/* Link zurück zur Übersicht (über dem Titel) */
+.beitrag-back {
+    display: inline-block;
+    margin-bottom: 14px;
+
+    color: var(--color-primary);
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.beitrag-back:hover {
+    text-decoration: underline;
+}
+
+
+/* Datum */
+.beitrag-date {
+    display: block;
+    margin-bottom: 24px;
+
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
+
+/* Bild über dem Text */
+.beitrag-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-bottom: 32px;
+}

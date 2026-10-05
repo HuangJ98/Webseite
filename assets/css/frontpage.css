@@ -1,0 +1,193 @@
+/* =========================================================
+   STARTSEITE (frontpage.html)
+   ---------------------------------------------------------
+   Wird zusätzlich zu style.css geladen.
+   Farben/Variablen kommen aus style.css.
+
+   1. Hero (Bild mit Text)
+   2. Abschnitte: Thema + Downloads
+   ========================================================= */
+
+
+/* =========================================================
+   1. HERO (BILD MIT TEXT)
+   ========================================================= */
+
+.hero-image {
+    position: relative;
+    height: 500px;
+    overflow: hidden;
+    background: var(--color-placeholder);
+}
+
+.hero-image > img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Text liegt über dem Bild */
+.hero-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+}
+
+.hero-text {
+    width: 37.5%;
+}
+
+.hero-label {
+    margin: 0 0 12px;
+    color: var(--color-primary);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 2px;
+}
+
+.hero-content h1 {
+    margin: 0 0 20px;
+    color: var(--color-primary);
+    font-size: 52px;
+    font-weight: 400;
+    line-height: 1.1;
+}
+
+.hero-description {
+    max-width: 600px;
+    margin: 0 0 28px;
+    color: var(--color-primary);
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+    .hero-image {
+        height: 300px;
+    }
+}
+
+@media (max-width: 700px) {
+    .hero-image {
+        height: 220px;
+    }
+}
+
+
+/* =========================================================
+   2. ABSCHNITTE: THEMA + DOWNLOADS
+   ========================================================= */
+
+/* Gemeinsam für beide Abschnitte */
+.topic-section,
+.download-section {
+    padding: 80px 0;
+}
+
+.topic-section {
+    background: var(--color-bg);
+}
+
+.download-section {
+    background: var(--color-bg-light);
+}
+
+/* Überschrift des Abschnitts (wird in beiden verwendet) */
+.topic-title {
+    margin: 0 0 50px;
+    color: var(--color-primary);
+    font-size: 38px;
+    font-weight: 400;
+    line-height: 1.2;
+    text-align: center;
+}
+
+/* Raster mit drei Spalten */
+.topic-columns,
+.download-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.topic-columns {
+    gap: 60px;
+}
+
+.download-cards {
+    gap: 30px;
+}
+
+/* Überschrift und Text in Spalten und Karten */
+.topic-column h3,
+.download-card h3 {
+    margin: 0 0 16px;
+    color: var(--color-primary);
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.topic-column p,
+.download-card p {
+    color: var(--color-text);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.topic-column p {
+    max-width: 320px;
+    margin: 0;
+}
+
+/* Download-Karte */
+.download-card {
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+}
+
+.download-card p {
+    margin: 0 0 28px;
+}
+
+/* Button immer unten in der Karte */
+.download-button {
+    margin-top: auto;
+    align-self: flex-start;
+}
+
+@media (max-width: 900px) {
+    .download-cards {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+@media (max-width: 700px) {
+    .topic-section,
+    .download-section {
+        padding: 55px 0;
+    }
+
+    .topic-title {
+        margin-bottom: 35px;
+        font-size: 30px;
+    }
+
+    .topic-columns {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .topic-column p {
+        max-width: none;
+    }
+
+    .download-card {
+        padding: 24px;
+    }
+}

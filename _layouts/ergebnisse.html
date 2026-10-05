@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="de">
+{% include head.html css="ergebnisse" %}
+
+<body>
+
+{% include header.html %}
+
+
+<!-- SEITENTITEL -->
+
+<section class="page-header">
+    <div class="site-container">
+        <h1>{{ page.title }}</h1>
+    </div>
+</section>
+
+
+<!-- DOWNLOADS (automatisch aus assets/ergebnisse/, neueste zuerst nach Datum im Dateinamen) -->
+
+<main class="page-content ergebnisse-content">
+    <div class="site-container">
+
+        {{ content }}
+
+        {% if site.data.ergebnisse.size > 0 %}
+
+        <table class="file-table">
+
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Größe</th>
+                    <th scope="col">Typ</th>
+                    <th scope="col"><span class="visually-hidden">Download</span></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for datei in site.data.ergebnisse %}
+                <tr>
+                    <td class="file-name" data-label="Name">
+                        <a href="{{ datei.url | relative_url }}" download>{{ datei.name }}</a>
+                    </td>
+                    <td data-label="Größe">{{ datei.size }}</td>
+                    <td data-label="Typ"><span class="file-type">{{ datei.type }}</span></td>
+                    <td class="file-action">
+                        <a class="hero-button file-button" href="{{ datei.url | relative_url }}" download>
+                            Herunterladen
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <p class="file-empty">Noch keine Ergebnisse veröffentlicht.</p>
+
+        {% endif %}
+
+    </div>
+</main>
+
+
+{% include footer.html %}
+
+</body>
+</html>

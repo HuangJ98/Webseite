@@ -1,50 +1,10 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>{{ page.title }} | EditA</title>
-
-    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-</head>
+{% include head.html css="frontpage" %}
 
 <body>
 
-<header class="site-header">
-
-    <nav class="navbar">
-
-        <div class="site-container">
-
-            <a class="navbar-logo" href="{{ '/' | relative_url }}">
-                <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="EditA">
-            </a>
-
-            <div class="navbar-links">
-
-                <a href="{{ '/aktuelles/' | relative_url }}"
-                   class="{% if page.url == '/aktuelles/' %}active{% endif %}">
-                    Aktuelles
-                </a>
-
-                <a href="{{ '/kurzdarstellung/' | relative_url }}"
-                   class="{% if page.url == '/kurzdarstellung/' %}active{% endif %}">
-                    Kurzdarstellung
-                </a>
-
-                <a href="{{ '/verbundpartner/' | relative_url }}"
-                   class="{% if page.url == '/verbundpartner/' %}active{% endif %}">
-                    Verbundpartner
-                </a>
-
-            </div>
-
-        </div>
-
-    </nav>
-
-</header>
+{% include header.html %}
 
 
 <!-- BILD -->
@@ -128,6 +88,46 @@
 </section>
 
 
+<!-- DOWNLOADS -->
+
+<section class="download-section">
+
+    <div class="site-container">
+
+        <h2 class="topic-title">
+            {{ page.download_title }}
+        </h2>
+
+
+        <div class="download-cards">
+
+            {% for card in page.download_cards %}
+            <div class="download-card">
+
+                <h3>
+                    {{ card.title }}
+                </h3>
+
+                <p>
+                    {{ card.text }}
+                </p>
+
+                <a class="hero-button download-button"
+                   href="{{ card.file | relative_url }}"
+                   download>
+                    {{ card.button | default: 'Herunterladen' }}
+                </a>
+
+            </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
 
 
 
@@ -140,11 +140,7 @@
 </main>
 
 
-<footer>
-    <div class="site-container">
-        <a href="{{ '/impressum/' | relative_url }}">Impressum</a>
-    </div>
-</footer>
+{% include footer.html %}
 
 </body>
 </html>

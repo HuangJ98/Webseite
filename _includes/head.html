@@ -1,0 +1,14 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ page.title }} | EditA</title>
+
+    <!-- Gemeinsames CSS: Farben, Navbar, Button, Footer -->
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+
+    <!-- Eigenes CSS der Seite -->
+    {% if include.css %}
+    <link rel="stylesheet" href="{{ '/assets/css/' | append: include.css | append: '.css' | relative_url }}">
+    {% endif %}
+</head>

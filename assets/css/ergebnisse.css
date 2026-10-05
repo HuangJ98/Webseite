@@ -1,0 +1,140 @@
+/* =========================================================
+   ERGEBNISSE (ergebnisse.html)
+   ---------------------------------------------------------
+   Wird zusätzlich zu style.css geladen.
+   Die Tabelle wird automatisch aus assets/ergebnisse/ gefüllt.
+   ========================================================= */
+
+
+/* Die Tabelle darf breiter sein als normaler Lesetext */
+.ergebnisse-content .site-container > .file-table {
+    max-width: 960px;
+}
+
+
+/* =========================================================
+   TABELLE
+   ========================================================= */
+
+.file-table {
+    width: 100%;
+    margin-top: 12px;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+}
+
+.file-table th {
+    padding: 0 16px 12px 0;
+    border-bottom: 2px solid var(--color-primary);
+
+    color: var(--color-primary);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.file-table td {
+    padding: 16px 16px 16px 0;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+/* Der Name darf umbrechen, alles andere bleibt einzeilig */
+.file-table td.file-name {
+    width: 100%;
+    white-space: normal;
+}
+
+.file-name a {
+    color: var(--color-primary);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.file-name a:hover {
+    text-decoration: underline;
+}
+
+/* Typ als kleines Etikett */
+.file-type {
+    display: inline-block;
+    padding: 2px 8px;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+}
+
+/* Download-Button: etwas kleiner als der normale Button */
+.file-table td.file-action {
+    padding-right: 0;
+    text-align: right;
+}
+
+.file-button {
+    padding: 8px 16px;
+    font-size: 14px;
+}
+
+.file-empty {
+    color: var(--color-text-muted);
+}
+
+/* Nur für Screenreader sichtbar */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   HANDY: JEDE DATEI ALS EIGENER BLOCK
+   ========================================================= */
+
+@media (max-width: 700px) {
+    .file-table thead {
+        display: none;
+    }
+
+    .file-table,
+    .file-table tbody,
+    .file-table tr,
+    .file-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .file-table tr {
+        padding: 18px 0;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .file-table td {
+        padding: 2px 0;
+        border: 0;
+        white-space: normal;
+    }
+
+    /* Datum, Größe, Typ mit Beschriftung davor */
+    .file-table td[data-label]:not(.file-name)::before {
+        content: attr(data-label) ": ";
+        color: var(--color-text-muted);
+    }
+
+    .file-table td.file-name {
+        margin-bottom: 6px;
+        font-size: 17px;
+    }
+
+    .file-table td.file-action {
+        margin-top: 12px;
+        text-align: left;
+    }
+}

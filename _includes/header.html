@@ -1,0 +1,34 @@
+<header class="site-header">
+
+    <nav class="navbar">
+
+        <div class="site-container">
+
+            <a class="navbar-logo" href="{{ '/' | relative_url }}">
+                <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="EditA">
+            </a>
+
+            <div class="navbar-links">
+
+                <a href="{{ '/aktuelles/' | relative_url }}"
+                   class="{% if page.url contains '/aktuelles/' %}active{% endif %}">
+                    Aktuelles
+                </a>
+
+                <a href="{{ '/kurzdarstellung/' | relative_url }}"
+                   class="{% if page.url == '/kurzdarstellung/' %}active{% endif %}">
+                    Kurzdarstellung
+                </a>
+
+                <a href="{{ '/ergebnisse/' | relative_url }}"
+                   class="{% if page.url == '/ergebnisse/' %}active{% endif %}">
+                    Ergebnisse
+                </a>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+</header>

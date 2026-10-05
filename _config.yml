@@ -2,3 +2,15 @@ title: Meine Webseite
 description: Meine erste Jerkyll Webseite
 url: "https://huangj98.github.io"
 baseurl: "/Webseite"
+# Beiträge für "Aktuelles": jede .md-Datei in _aktuelles/ wird ein Eintrag
+collections:
+  aktuelles:
+    output: true
+    permalink: /aktuelles/:title/
+
+defaults:
+  - scope:
+      path: ""
+      type: aktuelles
+    values:
+      layout: beitrag

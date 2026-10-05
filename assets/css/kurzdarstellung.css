@@ -1,0 +1,70 @@
+/* =========================================================
+   KURZDARSTELLUNG (kurzdarstellung.html)
+   ---------------------------------------------------------
+   Wird zusätzlich zu style.css geladen.
+   Seitenkopf, Textbreite und Überschriften kommen aus
+   style.css (Abschnitt 5). Hier nur, was nur für diese
+   Seite gilt.
+
+   Alle Regeln mit .kurzdarstellung-content beginnen, dann wirken
+   sie garantiert nur auf dieser Seite.
+   ========================================================= */
+
+
+/* =========================================================
+   EINSTIEG: TEXT LINKS, BILD RECHTS
+   ========================================================= */
+
+/* Der Einstieg darf breiter sein als der Lesetext darunter */
+.kurzdarstellung-content .site-container > .intro {
+    max-width: none;
+}
+
+.intro {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 48px;
+    align-items: center;
+
+    margin-bottom: 48px;
+}
+
+.intro-text {
+    margin: 0;
+
+    color: var(--color-primary);
+    font-size: 22px;
+    line-height: 1.5;
+}
+
+.intro-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
+
+/* Wird angezeigt, solange kein Bild eingetragen ist */
+.intro-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: var(--color-bg-light);
+    border: 1px dashed var(--color-border);
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
+/* Handy: Bild unter den Text */
+@media (max-width: 700px) {
+    .intro {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+
+    .intro-text {
+        font-size: 19px;
+    }
+}

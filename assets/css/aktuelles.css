@@ -1,0 +1,126 @@
+/* =========================================================
+   AKTUELLES (aktuelles.html)
+   ---------------------------------------------------------
+   Wird zusätzlich zu style.css geladen.
+   Seitenkopf, Textbreite und Überschriften kommen aus
+   style.css (Abschnitt 5). Hier nur, was nur für diese
+   Seite gilt.
+
+   Alle Regeln mit .aktuelles-content beginnen, dann wirken
+   sie garantiert nur auf dieser Seite.
+   ========================================================= */
+
+
+/* =========================================================
+   LISTE DER BEITRÄGE
+   ========================================================= */
+
+/* Die Liste darf etwas breiter sein als normaler Lesetext */
+.aktuelles-content .site-container > .news-list {
+    max-width: 960px;
+}
+
+.news-list {
+    display: grid;
+}
+
+
+/* =========================================================
+   EIN BEITRAG: BILD LINKS, TEXT RECHTS
+   ========================================================= */
+
+.news-item {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 36px;
+    align-items: start;
+
+    padding: 32px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.news-item:first-child {
+    padding-top: 0;
+}
+
+
+/* Bild (4:3, wird passend zugeschnitten) */
+.news-image {
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--color-bg-light);
+}
+
+.news-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    transition: transform 0.3s ease;
+}
+
+.news-item:hover .news-image img {
+    transform: scale(1.03);
+}
+
+/* Wird angezeigt, solange kein Bild eingetragen ist */
+.news-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+    border: 1px dashed var(--color-border);
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
+
+/* Text */
+.news-date {
+    display: block;
+    margin-bottom: 6px;
+
+    color: var(--color-text-muted);
+    font-size: 14px;
+}
+
+.news-text h2 {
+    margin: 0 0 10px;
+    font-size: 22px;
+}
+
+.news-text h2 a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.news-text h2 a:hover {
+    text-decoration: underline;
+}
+
+.news-text p {
+    margin: 0 0 14px;
+}
+
+.news-more {
+    color: var(--color-primary);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.news-more:hover {
+    text-decoration: underline;
+}
+
+
+/* Handy: Bild über dem Text */
+@media (max-width: 700px) {
+    .news-item {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        padding: 28px 0;
+    }
+}

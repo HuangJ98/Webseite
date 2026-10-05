@@ -1,62 +1,73 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>{{ page.title }} | EditA</title>
-
-    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-</head>
+{% include head.html css="aktuelles" %}
 
 <body>
 
-<header class="site-header">
+{% include header.html %}
 
-    <nav class="navbar">
 
-        <div class="site-container">
+<!-- SEITENTITEL -->
 
-            <a class="navbar-logo" href="{{ '/' | relative_url }}">
-                <img src="{{ '/assets/images/logo.svg' | relative_url }}" alt="EditA">
-            </a>
+<section class="page-header">
+    <div class="site-container">
+        <h1>{{ page.title }}</h1>
+    </div>
+</section>
 
-            <div class="navbar-links">
 
-                <a href="{{ '/aktuelles/' | relative_url }}"
-                   class="{% if page.url == '/aktuelles/' %}active{% endif %}">
-                    Aktuelles
+<!-- BEITRÄGE (automatisch aus _aktuelles/, neueste zuerst) -->
+
+<main class="page-content aktuelles-content">
+    <div class="site-container">
+
+        {{ content }}
+
+        {% assign beitraege = site.aktuelles | sort: 'date' | reverse %}
+
+        <div class="news-list">
+
+            {% for beitrag in beitraege %}
+            <article class="news-item">
+
+                <a class="news-image" href="{{ beitrag.url | relative_url }}" tabindex="-1" aria-hidden="true">
+                    {% if beitrag.image %}
+                    <img src="{{ beitrag.image | relative_url }}" alt="">
+                    {% else %}
+                    <span class="news-image-placeholder">Bild folgt</span>
+                    {% endif %}
                 </a>
 
-                <a href="{{ '/kurzdarstellung/' | relative_url }}"
-                   class="{% if page.url == '/kurzdarstellung/' %}active{% endif %}">
-                    Kurzdarstellung
-                </a>
+                <div class="news-text">
 
-                <a href="{{ '/verbundpartner/' | relative_url }}"
-                   class="{% if page.url == '/verbundpartner/' %}active{% endif %}">
-                    Verbundpartner
-                </a>
+                    <time class="news-date" datetime="{{ beitrag.date | date: '%Y-%m-%d' }}">
+                        {{ beitrag.date | date: '%d.%m.%Y' }}
+                    </time>
 
-            </div>
+                    <h2>
+                        <a href="{{ beitrag.url | relative_url }}">{{ beitrag.title }}</a>
+                    </h2>
+
+                    <p>{{ beitrag.teaser }}</p>
+
+                    <a class="news-more" href="{{ beitrag.url | relative_url }}">
+                        Weiterlesen <span aria-hidden="true">→</span>
+                    </a>
+
+                </div>
+
+            </article>
+            {% else %}
+            <p>Noch keine Beiträge.</p>
+            {% endfor %}
 
         </div>
 
-    </nav>
-
-</header>
-
-<main class="site-content">
-    <div class="site-container">
-        {{ content }}
     </div>
 </main>
 
 
-<footer>
-    <div class="site-container">
-        <a href="{{ '/impressum/' | relative_url }}">Impressum</a>
-    </div>
-</footer>
+{% include footer.html %}
 
 </body>
+</html>
