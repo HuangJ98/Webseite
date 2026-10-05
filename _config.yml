@@ -14,3 +14,18 @@ defaults:
       type: aktuelles
     values:
       layout: beitrag
+
+# Projektadresse für die untere Zeile im Footer
+# (PLATZHALTER: bitte durch die echte Adresse ersetzen)
+projekt:
+  name: EditA
+  institution: Institut Arbeit und Technik
+  strasse: Musterstraße 1
+  ort: 12345 Musterstadt
+  email: kontakt@example.org
+  # Link zur Anmeldung für die Mailingliste (PLATZHALTER)
+  mailingliste: https://example.org/mailingliste
+  # Links unter "Kontakt" im Footer. Entweder eigene Seite (/impressum/)
+  # oder ganze Adresse der Institution (https://...)
+  impressum: /impressum/
+  datenschutz: /datenschutz/

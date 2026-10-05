@@ -3,23 +3,29 @@
     <div class="site-container footer-container">
 
         <!-- LOGOS LINKS -->
-        <div class="footer-logos">
+        <div class="footer-block">
 
-            <a>
-                <img src="{{ '/assets/images/iat.png' | relative_url }}" alt="Bild 1">
-            </a>
+            <h2 class="footer-heading">Projektpartner</h2>
 
-            <a>
-                <img src="{{ '/assets/images/tu.png' | relative_url }}" alt="Bild 2">
-            </a>
+            <div class="footer-logos">
 
-            <a>
-                <img src="{{ '/assets/images/fr.webp' | relative_url }}" alt="Bild 3">
-            </a>
+                <a>
+                    <img src="{{ '/assets/images/iat.png' | relative_url }}" alt="Institut Arbeit und Technik">
+                </a>
 
-            <a>
-                <img src="{{ '/assets/images/ureka.png' | relative_url }}" alt="Bild 4">
-            </a>
+                <a>
+                    <img src="{{ '/assets/images/tu.png' | relative_url }}" alt="Technische Universität Berlin">
+                </a>
+
+                <a>
+                    <img src="{{ '/assets/images/fr.webp' | relative_url }}" alt="Frankfurt University of Applied Sciences">
+                </a>
+
+                <a>
+                    <img src="{{ '/assets/images/ureka.png' | relative_url }}" alt="UREKA European University">
+                </a>
+
+            </div>
 
         </div>
 
@@ -35,6 +41,56 @@
                 <p>Gefördert im Rahmen des Modellprogramms nach § 8 Abs. 3 SGB XI</p>
             </div>
 
+        </div>
+
+    </div>
+
+
+    <!-- UNTERER BEREICH: ADRESSE LINKS, ÜBER DIESE WEBSITE RECHTS -->
+    <!-- Adresse und Mailingliste werden in _config.yml unter "projekt:" gepflegt -->
+
+    <div class="site-container footer-bottom">
+
+        <div class="footer-block">
+            <h2 class="footer-heading">Kontakt</h2>
+
+            <address class="footer-address">
+                {{ site.projekt.name }}<br>
+                {{ site.projekt.institution }}<br>
+                {{ site.projekt.strasse }}<br>
+                {{ site.projekt.ort }}<br>
+                <a href="mailto:{{ site.projekt.email }}">{{ site.projekt.email }}</a>
+            </address>
+
+            <!-- Interne Seite (/impressum/) oder externe Adresse (https://...) -->
+            {% assign impressum = site.projekt.impressum %}
+            {% unless impressum contains '://' %}{% assign impressum = impressum | relative_url %}{% endunless %}
+            {% assign datenschutz = site.projekt.datenschutz %}
+            {% unless datenschutz contains '://' %}{% assign datenschutz = datenschutz | relative_url %}{% endunless %}
+
+            <nav class="footer-legal" aria-label="Rechtliches">
+                <a href="{{ impressum }}">Impressum</a>
+                <a href="{{ datenschutz }}">Datenschutz</a>
+            </nav>
+        </div>
+
+        <div class="footer-block footer-about">
+            <h2 class="footer-heading">Über diese Website</h2>
+
+            <p>
+                Diese Webseite gibt einen Überblick des Projektes EditA –
+                Evaluation von digitalen Anwendungen zur Sicherstellung der
+                Versorgungs- und Arbeitsqualität in der Pflege
+            </p>
+
+            <p>
+                Bleiben Sie über den Lauf des Projektes informiert und melden
+                Sie sich bei unserer Mailingliste an:
+            </p>
+
+            <a class="footer-mail-link" href="{{ site.projekt.mailingliste }}">
+                Zur Mailingliste <span aria-hidden="true">→</span>
+            </a>
         </div>
 
     </div>
