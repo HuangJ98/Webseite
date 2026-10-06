@@ -32,6 +32,8 @@
     --color-bg:           #ffffff;
     --color-bg-light:     #f4f7f7;   /* Download-Bereich */
     --color-placeholder:  #d9d9d9;   /* Hero ohne Bild */
+
+    --footer-right-width: 460px;     /* rechte Spalte im Footer (GKV + Über diese Website) */
 }
 
 
@@ -434,11 +436,13 @@ body {
 }
 
 /* Bild + Text (rechts) */
+/* Gleich breit wie "Über diese Website" darunter,
+   damit beide Blöcke links auf einer Linie beginnen */
 .footer-image-text {
     display: flex;
     align-items: center;
-    gap: 18px;
-    max-width: 360px;
+    gap: 20px;
+    width: var(--footer-right-width);
 }
 
 /* GKV-Logo */
@@ -446,7 +450,7 @@ body {
     flex-shrink: 0;
     display: block;
     width: auto;
-    height: 36px;
+    height: 56px;
 }
 
 .footer-text {
@@ -472,7 +476,7 @@ body {
     }
 
     .footer-image-text {
-        max-width: none;
+        width: auto;
     }
 }
 
@@ -514,7 +518,7 @@ body {
 
 /* Text rechts: nicht zu breit */
 .footer-about {
-    max-width: 460px;
+    width: var(--footer-right-width);
 }
 
 .footer-about p {
@@ -550,5 +554,9 @@ body {
     .footer-bottom {
         flex-direction: column;
         margin-top: 28px;
+    }
+
+    .footer-about {
+        width: auto;
     }
 }
