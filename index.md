@@ -37,6 +37,9 @@ download_cards:
       Hier steht ein kurzer Beschreibungstext für die zweite Datei.
     file: /assets/downloads/datei-2.pdf
     button: PDF herunterladen
+    # Link unter dem Button (optional, geht bei jeder Karte)
+    link: /fragebogen/
+    link_text: Individuellen Fragebogen erstellen
 
   - title: Auswertung
     text: >

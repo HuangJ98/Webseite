@@ -1,0 +1,171 @@
+/* =========================================================
+   FRAGEBOGEN (fragebogen.html)
+   ---------------------------------------------------------
+   Wird zusätzlich zu style.css geladen.
+   Oben Eingabezeile + Download, darunter Vorschau des PDFs.
+   Alle Regeln mit .fragebogen-content beginnen bzw. nutzen
+   fragebogen-Klassen, dann wirken sie nur auf dieser Seite.
+   ========================================================= */
+
+
+/* Generator darf breiter sein als normaler Lesetext */
+.fragebogen-content .site-container > .fragebogen-tool {
+    max-width: 960px;
+}
+
+/* Oben die Eingabezeile, darunter die Vorschau */
+.fragebogen-tool {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    margin-top: 32px;
+}
+
+
+/* =========================================================
+   EINGABEZEILE (ÜBER DER VORSCHAU)
+   Name der Technologie  [ Eingabe            ] [ Herunterladen ]
+   Hinweis / Meldung
+   ========================================================= */
+
+.fragebogen-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+        "label   label"
+        "eingabe button"
+        "hinweis hinweis"
+        "status  status";
+    gap: 10px 12px;
+    align-items: stretch;
+}
+
+.fragebogen-form label   { grid-area: label; }
+.fragebogen-form input   { grid-area: eingabe; }
+#fragebogen-download     { grid-area: button; }
+.fragebogen-hinweis      { grid-area: hinweis; }
+.fragebogen-status       { grid-area: status; }
+
+.fragebogen-form label {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.fragebogen-form input {
+    width: 100%;
+    padding: 12px 14px;
+
+    border: 1px solid var(--color-border);
+    border-radius: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font: inherit;
+}
+
+.fragebogen-form input:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 1px;
+    border-color: var(--color-primary);
+}
+
+.fragebogen-content .fragebogen-hinweis {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.fragebogen-button {
+    border: 0;
+    font: inherit;
+    cursor: pointer;
+}
+
+.fragebogen-button:disabled {
+    background: var(--color-border);
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+}
+
+.fragebogen-button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.fragebogen-content .fragebogen-status {
+    min-height: 1.5em;
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.fragebogen-content .fragebogen-status.is-error {
+    color: #b3261e;
+}
+
+
+/* =========================================================
+   VORSCHAU (RECHTS)
+   ========================================================= */
+
+/* .fragebogen-content davor, damit die allgemeine h2-Regel nicht greift */
+.fragebogen-content .fragebogen-vorschau-titel {
+    margin: 0 0 14px;
+    color: var(--color-primary);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* Seiten untereinander auf hellem Grund, wie Papier */
+.fragebogen-vorschau {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    padding: 20px;
+    background: var(--color-bg-light);
+}
+
+.fragebogen-seite {
+    display: block;
+    width: 100%;
+    max-width: 720px;
+    height: auto;
+    margin: 0 auto;
+
+    background: #ffffff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.fragebogen-laden {
+    margin: 0;
+    padding: 80px 0;
+    color: var(--color-text-muted);
+    text-align: center;
+}
+
+
+/* =========================================================
+   HANDY
+   ========================================================= */
+
+/* Handy: Button unter das Eingabefeld */
+@media (max-width: 600px) {
+    .fragebogen-form {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "label"
+            "eingabe"
+            "button"
+            "hinweis"
+            "status";
+    }
+
+    .fragebogen-vorschau {
+        padding: 12px;
+        gap: 12px;
+    }
+}

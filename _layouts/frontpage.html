@@ -112,11 +112,25 @@
                     {{ card.text }}
                 </p>
 
-                <a class="hero-button download-button"
-                   href="{{ card.file | relative_url }}"
-                   download>
-                    {{ card.button | default: 'Herunterladen' }}
-                </a>
+                <!-- Button + optionaler Link darunter (link/link_text in index.md) -->
+                <div class="download-actions">
+
+                    <a class="hero-button download-button"
+                       href="{{ card.file | relative_url }}"
+                       download>
+                        {{ card.button | default: 'Herunterladen' }}
+                    </a>
+
+                    {% if card.link %}
+                    <a class="download-link" href="{{ card.link | relative_url }}">
+                        {{ card.link_text | default: 'Mehr erfahren' }} <span aria-hidden="true">→</span>
+                    </a>
+                    {% else %}
+                    <!-- leere Zeile, damit alle Buttons auf einer Höhe bleiben -->
+                    <span class="download-link" aria-hidden="true">&nbsp;</span>
+                    {% endif %}
+
+                </div>
 
             </div>
             {% endfor %}

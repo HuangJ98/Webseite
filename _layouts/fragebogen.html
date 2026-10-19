@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="de">
+{% include head.html css="fragebogen" %}
+
+<body>
+
+{% include header.html %}
+
+
+<!-- SEITENTITEL -->
+
+<section class="page-header">
+    <div class="site-container">
+        <h1>{{ page.title }}</h1>
+    </div>
+</section>
+
+
+<!-- INHALT -->
+
+<main class="page-content fragebogen-content">
+    <div class="site-container">
+
+        <!-- Einleitung aus pages/fragebogen.md -->
+        {{ content }}
+
+        <!-- FRAGEBOGEN-GENERATOR
+             Vorlage und Platzhalter werden in pages/fragebogen.md eingestellt.
+             Die Logik steht in assets/js/fragebogen.js -->
+        <section class="fragebogen-tool"
+                 id="fragebogen-tool"
+                 aria-label="Individuellen Fragebogen erstellen"
+                 data-vorlage="{{ page.vorlage | relative_url }}"
+                 data-platzhalter="{{ page.platzhalter }}"
+                 data-worker="{{ '/assets/js/vendor/pdf.worker.min.js' | relative_url }}">
+
+            <!-- Eingabezeile (oben) -->
+            <form class="fragebogen-form" novalidate>
+
+                <label for="fragebogen-name">Name der Technologie</label>
+                <input type="text"
+                       id="fragebogen-name"
+                       name="technologie"
+                       maxlength="60"
+                       autocomplete="off"
+                       placeholder="z. B. Pflegedoku-App">
+
+                <p class="fragebogen-hinweis">
+                    Der Name wird überall dort eingesetzt, wo im Fragebogen
+                    {{ page.platzhalter }} steht.
+                </p>
+
+                <button type="submit" class="hero-button fragebogen-button" id="fragebogen-download" disabled>
+                    Fragebogen herunterladen (PDF)
+                </button>
+
+                <p class="fragebogen-status" id="fragebogen-status" role="status" aria-live="polite"></p>
+
+            </form>
+
+            <!-- Vorschau (darunter) -->
+            <div class="fragebogen-vorschau-bereich">
+                <h2 class="fragebogen-vorschau-titel">Vorschau</h2>
+                <div class="fragebogen-vorschau" id="fragebogen-vorschau">
+                    <p class="fragebogen-laden">Vorschau wird geladen …</p>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+</main>
+
+
+{% include footer.html %}
+
+<!-- PDF-Bibliotheken (liegen im Projekt, kein externer Server) -->
+<script src="{{ '/assets/js/vendor/pdf.min.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/vendor/pdf-lib.min.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/fragebogen.js' | relative_url }}"></script>
+
+</body>
+</html>
