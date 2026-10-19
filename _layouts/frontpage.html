@@ -101,6 +101,8 @@
 
         <div class="download-cards">
 
+            {% assign karten_mit_link = page.download_cards | where_exp: "k", "k.link" %}
+
             {% for card in page.download_cards %}
             <div class="download-card">
 
@@ -125,7 +127,7 @@
                     <a class="download-link" href="{{ card.link | relative_url }}">
                         {{ card.link_text | default: 'Mehr erfahren' }} <span aria-hidden="true">→</span>
                     </a>
-                    {% else %}
+                    {% elsif karten_mit_link.size > 0 %}
                     <!-- leere Zeile, damit alle Buttons auf einer Höhe bleiben -->
                     <span class="download-link" aria-hidden="true">&nbsp;</span>
                     {% endif %}

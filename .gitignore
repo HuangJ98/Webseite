@@ -6,7 +6,8 @@ _site/
 
 # Bundler / Ruby
 .bundle/
-vendor/
+# nur der Bundler-Ordner im Hauptverzeichnis, nicht assets/js/vendor/
+/vendor/
 
 # macOS
 .DS_Store

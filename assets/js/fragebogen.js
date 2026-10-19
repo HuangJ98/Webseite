@@ -17,6 +17,14 @@
     const root = document.getElementById("fragebogen-tool");
     if (!root) return;
 
+    // Fehlen die PDF-Bibliotheken (z. B. nicht hochgeladen), Hinweis statt Endlos-Laden
+    if (typeof pdfjsLib === "undefined" || typeof PDFLib === "undefined") {
+        document.getElementById("fragebogen-vorschau").textContent =
+            "Die Vorschau ist gerade nicht verfügbar (PDF-Bibliothek nicht gefunden).";
+        console.error("pdf.js oder pdf-lib nicht geladen: assets/js/vendor/ prüfen");
+        return;
+    }
+
     const VORLAGE    = root.dataset.vorlage;
     const PLATZHALTER = root.dataset.platzhalter || "[Name]";
     const MIN_SCHRIFT = 0.6;   // Schrift höchstens auf 60 % verkleinern
