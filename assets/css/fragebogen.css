@@ -2,7 +2,7 @@
    FRAGEBOGEN (fragebogen.html)
    ---------------------------------------------------------
    Wird zusätzlich zu style.css geladen.
-   Oben Eingabezeile + Download, darunter Vorschau des PDFs.
+   Oben Eingabezeile + Download, darunter Vorschau (eine Seite, blätterbar).
    Alle Regeln mit .fragebogen-content beginnen bzw. nutzen
    fragebogen-Klassen, dann wirken sie nur auf dieser Seite.
    ========================================================= */
@@ -25,7 +25,7 @@
 /* =========================================================
    EINGABEZEILE (ÜBER DER VORSCHAU)
    Name der Technologie  [ Eingabe            ] [ Herunterladen ]
-   Hinweis / Meldung
+   Meldung (nur bei Fehler oder langem Namen)
    ========================================================= */
 
 .fragebogen-form {
@@ -34,7 +34,6 @@
     grid-template-areas:
         "label   label"
         "eingabe button"
-        "hinweis hinweis"
         "status  status";
     gap: 10px 12px;
     align-items: stretch;
@@ -43,7 +42,6 @@
 .fragebogen-form label   { grid-area: label; }
 .fragebogen-form input   { grid-area: eingabe; }
 #fragebogen-download     { grid-area: button; }
-.fragebogen-hinweis      { grid-area: hinweis; }
 .fragebogen-status       { grid-area: status; }
 
 .fragebogen-form label {
@@ -66,13 +64,6 @@
     outline: 2px solid var(--color-primary);
     outline-offset: 1px;
     border-color: var(--color-primary);
-}
-
-.fragebogen-content .fragebogen-hinweis {
-    margin: 0;
-    color: var(--color-text-muted);
-    font-size: 14px;
-    line-height: 1.5;
 }
 
 .fragebogen-button {
@@ -119,12 +110,8 @@
     text-transform: uppercase;
 }
 
-/* Seiten untereinander auf hellem Grund, wie Papier */
+/* Eine Seite auf hellem Grund, wie Papier */
 .fragebogen-vorschau {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-
     padding: 20px;
     background: var(--color-bg-light);
 }
@@ -148,6 +135,47 @@
 }
 
 
+/* Blättern unter der Vorschau: ← Zurück   Seite 1 von 2   Weiter → */
+.fragebogen-blaettern {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 14px;
+    font-size: 15px;
+}
+
+.fragebogen-blaettern button {
+    padding: 8px 4px;
+    border: 0;
+    background: none;
+    color: var(--color-primary);
+    font: inherit;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.fragebogen-blaettern button:hover:not(:disabled) {
+    text-decoration: underline;
+}
+
+.fragebogen-blaettern button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* Auf der ersten/letzten Seite ausgegraut */
+.fragebogen-blaettern button:disabled {
+    color: var(--color-border);
+    cursor: default;
+}
+
+#fragebogen-seitenzahl {
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+
 /* =========================================================
    HANDY
    ========================================================= */
@@ -160,12 +188,10 @@
             "label"
             "eingabe"
             "button"
-            "hinweis"
             "status";
     }
 
     .fragebogen-vorschau {
         padding: 12px;
-        gap: 12px;
     }
 }

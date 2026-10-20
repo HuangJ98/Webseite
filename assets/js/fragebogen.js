@@ -33,6 +33,10 @@
     const button   = document.getElementById("fragebogen-download");
     const status   = document.getElementById("fragebogen-status");
     const vorschau = document.getElementById("fragebogen-vorschau");
+    const blaettern = document.getElementById("fragebogen-blaettern");
+    const zurueck   = document.getElementById("fragebogen-zurueck");
+    const weiter    = document.getElementById("fragebogen-weiter");
+    const seitenzahl = document.getElementById("fragebogen-seitenzahl");
 
     pdfjsLib.GlobalWorkerOptions.workerSrc = root.dataset.worker;
 
@@ -187,31 +191,52 @@
 
     /* ---------- 3. Vorschau und Download ---------- */
 
+    let vorschauDoc = null;    // aktuell angezeigtes PDF (pdf.js)
+    let aktuelleSeite = 1;     // bleibt beim Tippen auf derselben Seite
+
+    // Neues PDF übernehmen und die aktuelle Seite zeigen
     async function vorschauZeichnen(bytes) {
-        const doc = await pdfjsLib.getDocument({ data: bytes }).promise;
-        const breite = vorschau.clientWidth;
-        const fragment = document.createDocumentFragment();
-
-        for (let s = 1; s <= doc.numPages; s++) {
-            const seite   = await doc.getPage(s);
-            const basis   = seite.getViewport({ scale: 1 });
-            const dpr     = window.devicePixelRatio || 1;
-            const skala   = (breite / basis.width) * dpr;
-            const viewport = seite.getViewport({ scale: skala });
-
-            const canvas = document.createElement("canvas");
-            canvas.className = "fragebogen-seite";
-            canvas.width  = viewport.width;
-            canvas.height = viewport.height;
-            canvas.setAttribute("aria-label", "Vorschau Seite " + s);
-            canvas.setAttribute("role", "img");
-
-            await seite.render({ canvasContext: canvas.getContext("2d"), viewport: viewport }).promise;
-            fragment.appendChild(canvas);
-        }
-
-        vorschau.replaceChildren(fragment);
+        vorschauDoc = await pdfjsLib.getDocument({ data: bytes }).promise;
+        aktuelleSeite = Math.min(aktuelleSeite, vorschauDoc.numPages);
+        await seiteZeigen(aktuelleSeite);
     }
+
+    // Genau eine Seite in die Vorschau zeichnen
+    async function seiteZeigen(nummer) {
+        if (!vorschauDoc) return;
+        aktuelleSeite = nummer;
+
+        const seite    = await vorschauDoc.getPage(nummer);
+        const basis    = seite.getViewport({ scale: 1 });
+        const dpr      = window.devicePixelRatio || 1;
+        const breite   = Math.min(vorschau.clientWidth, 720);
+        const viewport = seite.getViewport({ scale: (breite / basis.width) * dpr });
+
+        const canvas = document.createElement("canvas");
+        canvas.className = "fragebogen-seite";
+        canvas.width  = viewport.width;
+        canvas.height = viewport.height;
+        canvas.setAttribute("role", "img");
+        canvas.setAttribute("aria-label", "Vorschau Seite " + nummer + " von " + vorschauDoc.numPages);
+
+        await seite.render({ canvasContext: canvas.getContext("2d"), viewport: viewport }).promise;
+        vorschau.replaceChildren(canvas);
+
+        // Blättern nur zeigen, wenn es mehr als eine Seite gibt
+        const anzahl = vorschauDoc.numPages;
+        blaettern.hidden = anzahl < 2;
+        seitenzahl.textContent = "Seite " + nummer + " von " + anzahl;
+        zurueck.disabled = nummer <= 1;
+        weiter.disabled  = nummer >= anzahl;
+    }
+
+    zurueck.addEventListener("click", () => {
+        if (aktuelleSeite > 1) seiteZeigen(aktuelleSeite - 1);
+    });
+
+    weiter.addEventListener("click", () => {
+        if (vorschauDoc && aktuelleSeite < vorschauDoc.numPages) seiteZeigen(aktuelleSeite + 1);
+    });
 
     async function aktualisieren() {
         const name = input.value.trim();
@@ -220,7 +245,7 @@
         try {
             if (name === "") {
                 await vorschauZeichnen(vorlageBytes.slice());
-                meldung("Geben Sie den Namen der Technologie ein. Die Vorschau zeigt dann den fertigen Fragebogen.");
+                meldung("");
                 return;
             }
             const ergebnis = await pdfBauen(name);

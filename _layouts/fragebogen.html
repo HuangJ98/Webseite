@@ -45,11 +45,6 @@
                        autocomplete="off"
                        placeholder="z. B. Pflegedoku-App">
 
-                <p class="fragebogen-hinweis">
-                    Der Name wird überall dort eingesetzt, wo im Fragebogen
-                    {{ page.platzhalter }} steht.
-                </p>
-
                 <button type="submit" class="hero-button fragebogen-button" id="fragebogen-download" disabled>
                     Fragebogen herunterladen (PDF)
                 </button>
@@ -64,6 +59,17 @@
                 <div class="fragebogen-vorschau" id="fragebogen-vorschau">
                     <p class="fragebogen-laden">Vorschau wird geladen …</p>
                 </div>
+
+                <!-- Blättern durch die Seiten des Fragebogens -->
+                <nav class="fragebogen-blaettern" id="fragebogen-blaettern" aria-label="Seiten der Vorschau" hidden>
+                    <button type="button" id="fragebogen-zurueck">
+                        <span aria-hidden="true">←</span> Zurück
+                    </button>
+                    <span id="fragebogen-seitenzahl" aria-live="polite">Seite 1 von 1</span>
+                    <button type="button" id="fragebogen-weiter">
+                        Weiter <span aria-hidden="true">→</span>
+                    </button>
+                </nav>
             </div>
 
         </section>
