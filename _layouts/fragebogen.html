@@ -25,13 +25,15 @@
         {{ content }}
 
         <!-- FRAGEBOGEN-GENERATOR
-             Vorlage und Platzhalter werden in pages/fragebogen.md eingestellt.
-             Die Logik steht in assets/js/fragebogen.js -->
+             Inhalt: assets/fragebogen/fragebogen.md, Einstellungen: pages/fragebogen.md.
+             Die Logik steht in assets/js/fragebogen/ -->
         <section class="fragebogen-tool"
                  id="fragebogen-tool"
                  aria-label="Individuellen Fragebogen erstellen"
-                 data-vorlage="{{ page.vorlage | relative_url }}"
+                 data-inhalt="{{ page.inhalt | relative_url }}"
                  data-platzhalter="{{ page.platzhalter }}"
+                 data-kopfzeile="{{ page.kopfzeile }}"
+                 data-logo="{{ '/assets/images/logo.svg' | relative_url }}"
                  data-worker="{{ '/assets/js/vendor/pdf.worker.min.js' | relative_url }}">
 
             <!-- Eingabezeile (oben) -->
@@ -80,10 +82,16 @@
 
 {% include footer.html %}
 
+<!-- Aussehen des PDFs aus _data/fragebogen_stil.yml (von Jekyll als JSON eingesetzt) -->
+<script type="application/json" id="fragebogen-stil">{{ site.data.fragebogen_stil | jsonify }}</script>
+
 <!-- PDF-Bibliotheken (liegen im Projekt, kein externer Server) -->
 <script src="{{ '/assets/js/vendor/pdf.min.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/vendor/pdf-lib.min.js' | relative_url }}"></script>
-<script src="{{ '/assets/js/fragebogen.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/vendor/pdfmake.min.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/vendor/vfs_fonts.min.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/vendor/hypher-de.js' | relative_url }}"></script>
+<!-- Fragebogen-Logik als Module: seite.js lädt markdown.js, umbruch.js und pdf.js selbst -->
+<script type="module" src="{{ '/assets/js/fragebogen/seite.js' | relative_url }}"></script>
 
 </body>
 </html>

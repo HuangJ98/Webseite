@@ -1,0 +1,90 @@
+# =========================================================
+# AUSSEHEN DES FRAGEBOGEN-PDFS
+# ---------------------------------------------------------
+# Maße in pt (Punkt): 1 pt ≈ 0,35 mm, 10 pt ≈ 3,5 mm
+# Farben: ein Name aus "farben" (z. B. petrol) oder ein
+#         Hex-Code (z. B. "#1e5a5a", mit Anführungszeichen)
+# Fehlt ein Wert, wird ein Standardwert genommen.
+# Inhalt des Fragebogens: assets/fragebogen/fragebogen.md
+# =========================================================
+
+
+# Farbpalette, die unten mit Namen benutzt wird
+farben:
+  petrol: "#1e5a5a"   # Überschriften, Tabellenkopf
+  text:   "#222222"   # Aussagen
+  grau:   "#555555"   # Einleitung, Beschreibungen, Kopf-/Fußzeile
+  linie:  "#dddddd"   # Linien zwischen den Aussagen
+  kasten: "#cccccc"   # Rahmen der Antwortkästen
+
+
+# Seitenränder (Seitengröße: A4)
+seite:
+  rand_links:  60
+  rand_rechts: 60
+  rand_oben:   80     # Platz für die Kopfzeile
+  rand_unten:  60     # Platz für die Fußzeile
+
+
+# Schrift für alles, was unten nicht extra eingestellt ist
+grundschrift:
+  groesse: 10
+  farbe: text
+  zeilenhoehe: 1.25   # 1 = eng, 1.5 = weit
+
+
+# Texte: groesse, fett (true/false), farbe, zeilenhoehe,
+#        abstand_oben, abstand_unten
+texte:
+  titel:          { groesse: 20,  fett: true,  farbe: petrol, abstand_unten: 10 }
+  absatz:         { groesse: 10,               farbe: grau,   abstand_unten: 6 }
+  ueberschrift:   { groesse: 12,  fett: true,  farbe: petrol, abstand_oben: 14, abstand_unten: 4 }
+  ja_nein:        { groesse: 10,               farbe: text,   abstand_oben: 8,  abstand_unten: 8 }
+  aussage:        { groesse: 10,               farbe: text }
+  tabellenkopf:   { groesse: 7.5, fett: true,  farbe: petrol, zeilenhoehe: 1.1 }
+  freitext_frage: { groesse: 11,  fett: true,  farbe: petrol, abstand_unten: 4 }
+
+
+# Ankreuz-Kästchen (Skala und Ja/Nein)
+kaestchen:
+  groesse: 10
+  linienstaerke: 0.8
+  farbe: grau
+
+
+# Ja/Nein-Frage: rechts die Kästchen "☐ Ja  ☐ Nein"
+ja_nein:
+  breite: 90          # Platz, der rechts für die Kästchen frei bleibt (rechtsbündig mit der Tabelle)
+  abstand: 16         # zwischen Frage und Kästchen
+
+
+# Tabelle mit den Aussagen und der 5er-Skala
+aussagen_tabelle:
+  skala_spalte: 56    # Breite je Skalen-Spalte
+  zellabstand: 6      # Abstand oben und unten in jeder Zeile
+  abstand_oben: 6
+  abstand_unten: 12
+  linie_kopf:   { staerke: 1.2, farbe: petrol }   # unter dem Tabellenkopf
+  linie_zeilen: { staerke: 0.6, farbe: linie }    # zwischen den Aussagen
+
+
+# Offene Fragen mit Antwortkasten
+freitext:
+  kasten_hoehe: 140
+  linienstaerke: 0.8
+  farbe: kasten
+  abstand_oben: 14
+
+
+# Kopfzeile: Text links (steht in pages/fragebogen.md), Logo rechts
+kopfzeile:
+  groesse: 8.5
+  farbe: grau
+  logo_breite: 54
+  linie: { staerke: 0.6, farbe: linie }
+
+
+# Fußzeile: "Seite X von Y"
+fusszeile:
+  groesse: 8.5
+  farbe: grau
