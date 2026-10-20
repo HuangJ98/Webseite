@@ -41,8 +41,11 @@ function breiteVon(text, groesse, fett) {
 }
 
 // Mögliche Trennstellen eines Wortes: Silben + nach vorhandenen Bindestrichen
+// ("Pflegedoku-App" -> "Pflegedoku-", "App"; ohne Regex-Lookbehind,
+//  den ältere Safari-Versionen vor iOS 16.4 nicht kennen)
 function silbenVon(wort) {
-    return wort.split(/(?<=-)/).flatMap((teil) => silben.hyphenate(teil));
+    const teile = wort.split("-").map((t, i, alle) => (i < alle.length - 1 ? t + "-" : t)).filter(Boolean);
+    return teile.flatMap((teil) => silben.hyphenate(teil));
 }
 
 
@@ -51,7 +54,7 @@ function silbenVon(wort) {
 // Ergebnis: pdfmake-Textstücke mit "\n" am Zeilenende.
 export function umbrechen(text, max, groesse, grundFett) {
     if (!messen) return inline(text);       // Schrift fehlt: pdfmake bricht selbst um
-    max = max * SICHERHEIT;
+    max = Math.max(max * SICHERHEIT, 1);    // nie 0 oder negativ (z. B. bei falschen Spaltenbreiten)
 
     // Wörter mit Fett-Angabe und ob davor ein Leerzeichen steht
     const woerter = [];
@@ -115,7 +118,12 @@ export function umbrechen(text, max, groesse, grundFett) {
                 continue;
             }
 
-            // 4. Notfall: Wort ohne Trennstelle ist breiter als die Zeile -> nach Zeichen trennen
+            // 4. Notfall: Wort ohne Trennstelle ist breiter als die Zeile -> nach Zeichen trennen.
+            //    Mindestens ein Zeichen pro Zeile, damit es immer weitergeht (keine Endlosschleife).
+            if (rest.length === 1) {
+                setzen(rest, w.fett, false);
+                break;
+            }
             let n = rest.length - 1;
             while (n > 1 && breiteVon(rest.slice(0, n) + "-", groesse, w.fett) > max) n--;
             setzen(rest.slice(0, n) + "-", w.fett, false);

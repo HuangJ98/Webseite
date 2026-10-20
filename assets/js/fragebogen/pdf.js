@@ -34,7 +34,7 @@ const STANDARD = {
     kaestchen: { groesse: 10, linienstaerke: 0.8, farbe: "grau" },
     ja_nein: { breite: 90, abstand: 16 },
     aussagen_tabelle: {
-        skala_spalte: 56, zellabstand: 6, abstand_oben: 6, abstand_unten: 12,
+        skala_spalte: 56, text_mindestbreite: 150, zellabstand: 6, abstand_oben: 6, abstand_unten: 12,
         linie_kopf: { staerke: 1.2, farbe: "petrol" },
         linie_zeilen: { staerke: 0.6, farbe: "linie" }
     },
@@ -158,8 +158,14 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
             const kopf = [{ text: "Aussage", style: "tabellenkopf", alignment: "left" }]
                 .concat(t.skala.map((s) => ({ text: s, style: "tabellenkopf" })));
 
-            // Breite der Textspalte = Seite minus Skalen-Spalten minus Innenabstände (siehe layout)
-            const textSpalte = BREITE - t.skala.length * T.skala_spalte - (6 + (t.skala.length - 1) * 8 + 2);
+            // Spaltenbreiten: Bei vielen Skalen-Stufen werden die Skalen-Spalten schmaler,
+            // damit für den Text mindestens "text_mindestbreite" bleibt.
+            const anzahl  = t.skala.length;
+            const innen   = 6 + (anzahl - 1) * 8 + 2;        // Innenabstände (siehe layout unten)
+            const textMin = Math.min(T.text_mindestbreite, BREITE / 2);
+            const spalte  = Math.max(STIL.kaestchen.groesse + 4,
+                                     Math.min(T.skala_spalte, (BREITE - textMin - innen) / anzahl));
+            const textSpalte = BREITE - anzahl * spalte - innen;
 
             const zeilen = t.aussagen.map((aussage) => {
                 nummer++;
@@ -172,7 +178,7 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
                 table: {
                     headerRows: 1,                 // Kopf wiederholt sich auf jeder Seite
                     dontBreakRows: true,
-                    widths: ["*"].concat(t.skala.map(() => T.skala_spalte)),
+                    widths: ["*"].concat(t.skala.map(() => spalte)),
                     body: [kopf].concat(zeilen)
                 },
                 layout: {

@@ -60,7 +60,8 @@ ja_nein:
 
 # Tabelle mit den Aussagen und der 5er-Skala
 aussagen_tabelle:
-  skala_spalte: 56    # Breite je Skalen-Spalte
+  skala_spalte: 56    # Breite je Skalen-Spalte (höchstens; bei vielen Stufen automatisch schmaler)
+  text_mindestbreite: 150   # so viel Platz bleibt mindestens für den Aussagen-Text
   zellabstand: 6      # Abstand oben und unten in jeder Zeile
   abstand_oben: 6
   abstand_unten: 12

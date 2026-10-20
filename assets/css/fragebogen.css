@@ -145,6 +145,11 @@
     font-size: 15px;
 }
 
+/* "display: flex" oben würde das hidden-Attribut sonst überschreiben */
+.fragebogen-blaettern[hidden] {
+    display: none;
+}
+
 .fragebogen-blaettern button {
     padding: 8px 4px;
     border: 0;

@@ -31,10 +31,20 @@ const status     = document.getElementById("fragebogen-status");
 
 let quelltext = "";         // Inhalt der Markdown-Datei
 let logoSvg = null;         // Inhalt der Logo-Datei
+let geladen = false;        // erst true, wenn Markdown, Logo und Schrift da sind
 let vorschauDoc = null;     // aktuell angezeigtes PDF (pdf.js)
 let aktuelleSeite = 1;      // bleibt beim Tippen auf derselben Seite
-let timer = null;
+let timer = null;           // Pause nach dem Tippen
+let groessenTimer = null;   // Pause nach dem Ändern der Fenstergröße
 let breiteAlt = 0;
+
+// Zähler gegen veraltete Ergebnisse: Beim schnellen Tippen können mehrere PDFs
+// gleichzeitig entstehen. Angezeigt wird nur das der letzten Eingabe.
+let auftrag = 0;            // zählt PDF-Erzeugungen
+let zeichnung = 0;          // zählt Seiten-Zeichnungen (Tippen, Blättern, Größe ändern)
+
+// Signal für fragebogen.html: das Skript ist gestartet (sonst erscheint dort eine Fehlermeldung)
+window.fragebogenGestartet = true;
 
 if (root) starten();
 
@@ -48,6 +58,10 @@ function starten() {
     }
 
     pdfjsLib.GlobalWorkerOptions.workerSrc = root.dataset.worker;
+
+    // Bis alles geladen ist, kann man noch nichts eingeben (sonst entsteht ein leeres PDF)
+    input.disabled = true;
+    button.disabled = true;
 
     // Aussehen aus _data/fragebogen_stil.yml (von Jekyll als JSON in die Seite gesetzt)
     const stil = document.getElementById("fragebogen-stil");
@@ -66,6 +80,8 @@ function starten() {
         .then(([md, svg]) => {
             quelltext = md;
             logoSvg = svg;
+            geladen = true;
+            input.disabled = false;
             breiteAlt = vorschau.clientWidth;
             return aktualisieren();
         })
@@ -91,17 +107,38 @@ function pdfFuer(name) {
 
 /* ---------- Vorschau (eine Seite, blätterbar) ---------- */
 
-async function vorschauZeichnen(bytes) {
-    vorschauDoc = await pdfjsLib.getDocument({ data: bytes }).promise;
-    aktuelleSeite = Math.min(aktuelleSeite, vorschauDoc.numPages);
+// Neues PDF übernehmen. "nr" = Nummer der Eingabe; ist inzwischen eine neuere
+// unterwegs, wird dieses Ergebnis verworfen.
+async function vorschauZeichnen(bytes, nr) {
+    const neu = await pdfjsLib.getDocument({ data: bytes }).promise;
+    if (nr !== auftrag) {               // veraltet: gleich wieder freigeben
+        neu.destroy();
+        return;
+    }
+
+    const alt = vorschauDoc;
+    vorschauDoc = neu;
+    aktuelleSeite = Math.min(aktuelleSeite, neu.numPages);
     await seiteZeigen(aktuelleSeite);
+    if (alt) alt.destroy();             // Speicher des vorherigen PDFs freigeben
 }
 
 async function seiteZeigen(nummer) {
     if (!vorschauDoc) return;
     aktuelleSeite = nummer;
+    const nr  = ++zeichnung;
+    const doc = vorschauDoc;
 
-    const seite    = await vorschauDoc.getPage(nummer);
+    try {
+        await seiteRendern(doc, nummer, nr);
+    } catch (e) {
+        if (nr !== zeichnung) return;   // veraltete Zeichnung abgebrochen: kein Fehler
+        throw e;
+    }
+}
+
+async function seiteRendern(doc, nummer, nr) {
+    const seite    = await doc.getPage(nummer);
     const basis    = seite.getViewport({ scale: 1 });
     const dpr      = window.devicePixelRatio || 1;
     const breite   = Math.min(vorschau.clientWidth, 720);
@@ -112,13 +149,14 @@ async function seiteZeigen(nummer) {
     canvas.width  = viewport.width;
     canvas.height = viewport.height;
     canvas.setAttribute("role", "img");
-    canvas.setAttribute("aria-label", "Vorschau Seite " + nummer + " von " + vorschauDoc.numPages);
+    canvas.setAttribute("aria-label", "Vorschau Seite " + nummer + " von " + doc.numPages);
 
     await seite.render({ canvasContext: canvas.getContext("2d"), viewport: viewport }).promise;
+    if (nr !== zeichnung) return;       // inzwischen wurde etwas Neueres gezeichnet
     vorschau.replaceChildren(canvas);
 
     // Blättern nur zeigen, wenn es mehr als eine Seite gibt
-    const anzahl = vorschauDoc.numPages;
+    const anzahl = doc.numPages;
     blaettern.hidden = anzahl < 2;
     seitenzahl.textContent = "Seite " + nummer + " von " + anzahl;
     zurueck.disabled = nummer <= 1;
@@ -129,12 +167,17 @@ async function seiteZeigen(nummer) {
 /* ---------- Eingabe und Download ---------- */
 
 async function aktualisieren() {
+    if (!geladen) return;
     const name = input.value.trim();
+    const nr = ++auftrag;
     button.disabled = name === "";
     try {
-        await vorschauZeichnen(await pdfFuer(name));
-        meldung("");
+        const bytes = await pdfFuer(name);
+        if (nr !== auftrag) return;     // inzwischen wurde weitergetippt
+        await vorschauZeichnen(bytes, nr);
+        if (nr === auftrag) meldung("");
     } catch (e) {
+        if (nr !== auftrag) return;
         console.error(e);
         meldung("Der Fragebogen konnte nicht erstellt werden. Bitte laden Sie die Seite neu.", true);
     }
@@ -142,7 +185,7 @@ async function aktualisieren() {
 
 async function herunterladen() {
     const name = input.value.trim();
-    if (!name) return;
+    if (!name || !geladen) return;
     try {
         const bytes = await pdfFuer(name);
         const url   = URL.createObjectURL(new Blob([bytes], { type: "application/pdf" }));
@@ -167,6 +210,11 @@ function dateiname(name) {
         .replace(/^-|-$/g, "") || "individuell";
 }
 
+function zeichenFehler(e) {
+    console.error(e);
+    meldung("Die Vorschau konnte nicht angezeigt werden. Bitte laden Sie die Seite neu.", true);
+}
+
 function meldung(text, fehler) {
     status.textContent = text;
     status.classList.toggle("is-error", !!fehler);
@@ -176,7 +224,7 @@ function meldung(text, fehler) {
 function ereignisseVerbinden() {
     // Vorschau erst kurz nach dem Tippen neu bauen
     input.addEventListener("input", () => {
-        button.disabled = input.value.trim() === "";
+        button.disabled = !geladen || input.value.trim() === "";
         clearTimeout(timer);
         timer = setTimeout(aktualisieren, 400);
     });
@@ -187,18 +235,18 @@ function ereignisseVerbinden() {
     });
 
     zurueck.addEventListener("click", () => {
-        if (aktuelleSeite > 1) seiteZeigen(aktuelleSeite - 1);
+        if (aktuelleSeite > 1) seiteZeigen(aktuelleSeite - 1).catch(zeichenFehler);
     });
 
     weiter.addEventListener("click", () => {
-        if (vorschauDoc && aktuelleSeite < vorschauDoc.numPages) seiteZeigen(aktuelleSeite + 1);
+        if (vorschauDoc && aktuelleSeite < vorschauDoc.numPages) seiteZeigen(aktuelleSeite + 1).catch(zeichenFehler);
     });
 
     // Vorschau an neue Breite anpassen (z. B. Handy drehen)
     window.addEventListener("resize", () => {
         if (Math.abs(vorschau.clientWidth - breiteAlt) < 40) return;
         breiteAlt = vorschau.clientWidth;
-        clearTimeout(timer);
-        timer = setTimeout(() => seiteZeigen(aktuelleSeite), 300);
+        clearTimeout(groessenTimer);
+        groessenTimer = setTimeout(() => seiteZeigen(aktuelleSeite).catch(zeichenFehler), 300);
     });
 }

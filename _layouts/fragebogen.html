@@ -93,5 +93,17 @@
 <!-- Fragebogen-Logik als Module: seite.js lädt markdown.js, umbruch.js und pdf.js selbst -->
 <script type="module" src="{{ '/assets/js/fragebogen/seite.js' | relative_url }}"></script>
 
+<!-- Startet seite.js nicht (z. B. sehr alter Browser oder Datei fehlt), klare Meldung statt Endlos-Laden -->
+<script>
+    window.addEventListener("load", function () {
+        if (window.fragebogenGestartet) return;
+        var vorschau = document.getElementById("fragebogen-vorschau");
+        if (vorschau) {
+            vorschau.textContent = "Ihr Browser kann den Fragebogen leider nicht erstellen. " +
+                "Bitte aktualisieren Sie den Browser oder öffnen Sie die Seite in einem anderen Browser.";
+        }
+    });
+</script>
+
 </body>
 </html>
