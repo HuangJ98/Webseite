@@ -3,7 +3,7 @@
    ---------------------------------------------------------
    Steuert die Seite /fragebogen/:
    - beim Start Inhalt (Markdown), Logo und Schrift laden
-   - bei jeder Eingabe [Name] ersetzen, PDF neu bauen
+   - bei jeder Eingabe den Platzhalter (NAME) ersetzen, PDF neu bauen
    - Vorschau (eine Seite, blätterbar) mit pdf.js
    - Download des fertigen PDFs
 
@@ -96,8 +96,11 @@ function starten() {
 /* ---------- PDF für den eingegebenen Namen ---------- */
 
 function pdfFuer(name) {
-    const platzhalter = root.dataset.platzhalter || "[Name]";
-    const ersetzt = quelltext.split(platzhalter).join(name || platzhalter);
+    const platzhalter = root.dataset.platzhalter || "NAME";
+    // Nur als eigenes Wort ersetzen: "NAME" ja, "VORNAME" oder "NAMEN" nicht.
+    // Funktion statt Text als Ersatz, damit Zeichen wie "$" im Namen nichts auslösen.
+    const muster = new RegExp("(^|[^\\p{L}\\p{N}])" + platzhalter.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?![\\p{L}\\p{N}])", "gu");
+    const ersetzt = quelltext.replace(muster, (treffer, davor) => davor + (name || platzhalter));
     return pdfErzeugen(markdownLesen(ersetzt), {
         logoSvg: logoSvg,
         kopfzeile: root.dataset.kopfzeile

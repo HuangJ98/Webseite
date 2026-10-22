@@ -40,6 +40,13 @@ function breiteVon(text, groesse, fett) {
     return messen.measureText(text).width;
 }
 
+// Breite eines Textes im PDF (pt), z. B. um Auswahl-Optionen auf Zeilen zu verteilen.
+// Ohne geladene Schrift: grobe Schätzung.
+export function textBreite(text, groesse, fett) {
+    if (!messen) return text.length * groesse * 0.55;
+    return breiteVon(text, groesse, fett);
+}
+
 // Mögliche Trennstellen eines Wortes: Silben + nach vorhandenen Bindestrichen
 // ("Pflegedoku-App" -> "Pflegedoku-", "App"; ohne Regex-Lookbehind,
 //  den ältere Safari-Versionen vor iOS 16.4 nicht kennen)

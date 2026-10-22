@@ -39,7 +39,9 @@ texte:
   titel:          { groesse: 20,  fett: true,  farbe: petrol, abstand_unten: 10 }
   absatz:         { groesse: 10,               farbe: grau,   abstand_unten: 6 }
   ueberschrift:   { groesse: 12,  fett: true,  farbe: petrol, abstand_oben: 14, abstand_unten: 4 }
-  ja_nein:        { groesse: 10,               farbe: text,   abstand_oben: 8,  abstand_unten: 8 }
+  ja_nein:        { groesse: 10,               farbe: text,   abstand_oben: 12, abstand_unten: 6 }
+  frage:          { groesse: 10,               farbe: text,   abstand_oben: 12, abstand_unten: 6 }   # Code, Zahl, Auswahl, Einschätzung
+                  # Abstand zwischen zwei Fragen = abstand_unten + abstand_oben (hier 18)
   aussage:        { groesse: 10,               farbe: text }
   tabellenkopf:   { groesse: 7.5, fett: true,  farbe: petrol, zeilenhoehe: 1.1 }
   freitext_frage: { groesse: 11,  fett: true,  farbe: petrol, abstand_unten: 4 }
@@ -52,10 +54,40 @@ kaestchen:
   farbe: grau
 
 
-# Ja/Nein-Frage: rechts die Kästchen "☐ Ja  ☐ Nein"
-ja_nein:
-  breite: 90          # Platz, der rechts für die Kästchen frei bleibt (rechtsbündig mit der Tabelle)
-  abstand: 16         # zwischen Frage und Kästchen
+# Code: Frage, direkt dahinter die Schreiblinie
+code:
+  linie_breite: 200
+  linienstaerke: 0.8
+  farbe: grau
+  abstand: 8          # zwischen Frage und Linie
+
+
+# Zahl: Frage, direkt dahinter eine kurze Schreiblinie
+zahl:
+  linie_breite: 60
+  linienstaerke: 0.8
+  farbe: grau
+  abstand: 8
+
+
+# Auswahl und Ja/Nein: Frage, darunter die Antwortmöglichkeiten
+# (ab 3 Antworten: gleich breite Spalten über die ganze Breite; Ja/Nein kompakt)
+auswahl:
+  abstand_optionen: 22   # zwischen den Antwortmöglichkeiten (bzw. Spalten)
+  abstand_frage: 2       # zwischen Frage und ihren Antwortmöglichkeiten (klein, damit sie zusammengehören)
+  andere_linie: 120      # Länge der Schreiblinie bei Optionen mit "___" (z. B. "andere: ___")
+  linienstaerke: 0.8
+  farbe: grau
+
+
+# Einschätzung: "sehr unsicher  ☐ ☐ ☐ ☐ ☐  sehr sicher"
+einschaetzung:
+  stufe_breite: 30          # Breite je Kästchen-Spalte
+  zahlen: false             # true = Zahlen 1…5 über den Kästchen anzeigen
+  zahlen_groesse: 8         # Schriftgröße der Zahlen (nur bei zahlen: true)
+  zahlen_farbe: grau
+  abstand_frage: 2          # zwischen Frage und ihren Kästchen
+  abstand_beschriftung: 8   # zwischen Beschriftung und Kästchen
 
 
 # Tabelle mit den Aussagen und der 5er-Skala

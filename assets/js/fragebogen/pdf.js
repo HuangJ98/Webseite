@@ -12,7 +12,7 @@
    Braucht: pdfMake (als <script> geladen)
    ========================================================= */
 
-import { umbrechen } from "./umbruch.js";
+import { umbrechen, textBreite } from "./umbruch.js";
 
 
 /* ---------- Aussehen: kommt aus _data/fragebogen_stil.yml ---------- */
@@ -26,13 +26,17 @@ const STANDARD = {
         titel:          { groesse: 20, fett: true, farbe: "petrol", abstand_unten: 10 },
         absatz:         { groesse: 10, farbe: "grau", abstand_unten: 6 },
         ueberschrift:   { groesse: 12, fett: true, farbe: "petrol", abstand_oben: 14, abstand_unten: 4 },
-        ja_nein:        { groesse: 10, farbe: "text", abstand_oben: 8, abstand_unten: 8 },
+        ja_nein:        { groesse: 10, farbe: "text", abstand_oben: 12, abstand_unten: 6 },
+        frage:          { groesse: 10, farbe: "text", abstand_oben: 12, abstand_unten: 6 },
         aussage:        { groesse: 10, farbe: "text" },
         tabellenkopf:   { groesse: 7.5, fett: true, farbe: "petrol", zeilenhoehe: 1.1 },
         freitext_frage: { groesse: 11, fett: true, farbe: "petrol", abstand_unten: 4 }
     },
     kaestchen: { groesse: 10, linienstaerke: 0.8, farbe: "grau" },
-    ja_nein: { breite: 90, abstand: 16 },
+    code: { linie_breite: 200, linienstaerke: 0.8, farbe: "grau", abstand: 8 },
+    zahl: { linie_breite: 60, linienstaerke: 0.8, farbe: "grau", abstand: 8 },
+    auswahl: { abstand_optionen: 22, abstand_frage: 2, andere_linie: 120, linienstaerke: 0.8, farbe: "grau" },
+    einschaetzung: { stufe_breite: 30, zahlen: false, zahlen_groesse: 8, zahlen_farbe: "grau", abstand_frage: 2, abstand_beschriftung: 8 },
     aussagen_tabelle: {
         skala_spalte: 56, text_mindestbreite: 150, zellabstand: 6, abstand_oben: 6, abstand_unten: 12,
         linie_kopf: { staerke: 1.2, farbe: "petrol" },
@@ -108,6 +112,115 @@ function kaestchen() {
     };
 }
 
+// Schreiblinie zum Ausfüllen (Code, Zahl); liegt auf Höhe der Textgrundlinie
+function schreiblinie(cfg) {
+    const y = textStil("frage").groesse * 1.15;
+    return {
+        width: cfg.linie_breite,
+        canvas: [{ type: "line", x1: 0, y1: y, x2: cfg.linie_breite, y2: y,
+                   lineWidth: cfg.linienstaerke, lineColor: farbe(cfg.farbe) }]
+    };
+}
+
+// Frage, direkt dahinter die Schreiblinie ("auto" = Frage nur so breit wie ihr Text)
+function frageMitLinie(text, cfg, breite) {
+    return {
+        style: "frage",
+        columnGap: cfg.abstand,
+        columns: [
+            { text: gesetzt(text, breite - cfg.linie_breite - cfg.abstand, "frage"), width: "auto" },
+            schreiblinie(cfg)
+        ]
+    };
+}
+
+// Auswahl-Optionen unter der Frage.
+// - Zwei Optionen (z. B. Ja/Nein): kompakt nebeneinander "☐ Ja   ☐ Nein"
+// - Ab drei Optionen: Raster aus gleich breiten Spalten über die ganze Zeilenbreite.
+//   Bei mehreren Zeilen stehen die Kästchen genau untereinander.
+function optionenZeilen(optionen, breite) {
+    const A = STIL.auswahl;
+    const K = STIL.kaestchen.groesse;
+    const f = textStil("frage");
+    const RESERVE = 4;                                  // pdfmake misst minimal anders
+
+    // 1. Jede Option vorbereiten und ihre Breite messen
+    const eintraege = optionen.map((roh) => {
+        // "anderen Bereich: ___" -> Option mit Schreiblinie dahinter
+        const mitLinie = /_{3,}\s*$/.test(roh);
+        const option   = roh.replace(/_{3,}\s*$/, "").trim();
+        const linie    = mitLinie ? 4 + A.andere_linie : 0;
+        const textMax  = breite - K - 5 - linie;
+
+        const teile = [kaestchen(), { text: gesetzt(option, textMax, "frage"), width: "auto", margin: [5, 0, 0, 0] }];
+        if (mitLinie) {
+            teile.push(Object.assign(
+                schreiblinie({ linie_breite: A.andere_linie, linienstaerke: A.linienstaerke, farbe: A.farbe }),
+                { margin: [4, 0, 0, 0] }
+            ));
+        }
+        return {
+            breite: Math.min(K + 5 + textBreite(option, f.groesse, !!f.fett) + linie + RESERVE, breite),
+            // columnGap: 0 nötig, sonst erbt pdfmake den Abstand zwischen den Optionen
+            // und setzt ihn auch zwischen Kästchen, Text und Linie
+            inhalt: { columns: teile, columnGap: 0 }
+        };
+    });
+
+    const zeile = (spalten, i) => ({
+        columns: spalten,
+        columnGap: A.abstand_optionen,
+        margin: [0, i === 0 ? A.abstand_frage : 4, 0, 0]
+    });
+
+    // 2a. Zwei oder weniger Optionen: kompakt, so breit wie nötig
+    if (eintraege.length <= 2) {
+        return [zeile(eintraege.map((e) => Object.assign({ width: "auto" }, e.inhalt)), 0)];
+    }
+
+    // 2b. Raster: so viele Spalten, wie die längste Option zulässt ...
+    const laengste = Math.max.apply(null, eintraege.map((e) => e.breite));
+    let spalten = 1;
+    for (let k = eintraege.length; k >= 1; k--) {
+        if ((breite - (k - 1) * A.abstand_optionen) / k >= laengste) { spalten = k; break; }
+    }
+    // ... und gleichmäßig verteilt (2 + 2 statt 3 + 1)
+    const zeilenAnzahl = Math.ceil(eintraege.length / spalten);
+    spalten = Math.ceil(eintraege.length / zeilenAnzahl);
+
+    // 3. Zeilen bauen; letzte Zeile mit leeren Spalten auffüllen, damit alle gleich breit sind
+    const zeilen = [];
+    for (let i = 0; i < eintraege.length; i += spalten) {
+        const zellen = eintraege.slice(i, i + spalten).map((e) => Object.assign({ width: "*" }, e.inhalt));
+        while (zellen.length < spalten) zellen.push({ width: "*", text: "" });
+        zeilen.push(zeile(zellen, zeilen.length));
+    }
+    return zeilen;
+}
+
+// Einschätzung: "sehr unsicher  ☐ ☐ ☐ ☐ ☐  sehr sicher"
+// (mit "zahlen: true" in der YAML stehen 1…n über den Kästchen)
+function einschaetzungZeile(links, rechts, stufen) {
+    const E = STIL.einschaetzung;
+    const f = textStil("frage");
+    const zahlenHoehe = E.zahlen ? E.zahlen_groesse * 1.4 : 0;   // Platz der Zahlenzeile über den Kästchen
+
+    const spalten = [];
+    if (links) spalten.push({ text: links, width: "auto", margin: [0, zahlenHoehe, E.abstand_beschriftung, 0] });
+    for (let i = 1; i <= stufen; i++) {
+        spalten.push({
+            width: E.stufe_breite,
+            stack: (E.zahlen
+                ? [{ text: String(i), alignment: "center", fontSize: E.zahlen_groesse, color: farbe(E.zahlen_farbe), lineHeight: 1 }]
+                : []
+            ).concat([{ stack: [kaestchen()], alignment: "center", margin: [0, E.zahlen ? 2 : 0, 0, 0] }])
+        });
+    }
+    if (rechts) spalten.push({ text: rechts, width: "auto", margin: [E.abstand_beschriftung, zahlenHoehe, 0, 0] });
+
+    return { columns: spalten, columnGap: 0, fontSize: f.groesse, margin: [0, E.abstand_frage, 0, 0] };
+}
+
 function dokumentBauen(teile, logoSvg, kopfzeile) {
     const R          = STIL.seite;
     const SEITENRAND = [R.rand_links, R.rand_oben, R.rand_rechts, R.rand_unten];
@@ -116,7 +229,16 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
     const inhalt = [];
     let nummer = 0;
 
+    // Seitenumbruch: der nächste Baustein beginnt auf einer neuen Seite
+    let neueSeite = false;
+
     teile.forEach((t) => {
+        if (t.typ === "seitenumbruch") {
+            neueSeite = inhalt.length > 0;      // nicht vor dem allerersten Baustein
+            return;
+        }
+        const start = inhalt.length;
+
         switch (t.typ) {
 
         case "titel":
@@ -131,27 +253,38 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
             inhalt.push({ text: gesetzt(t.text, BREITE, "ueberschrift"), style: "ueberschrift" });
             break;
 
-        case "janein": {
-            const JN = STIL.ja_nein;
+        case "janein":
+            // wie eine Auswahl mit den Optionen "Ja" und "Nein": Kästchen unter der Frage
             inhalt.push({
                 style: "ja_nein",
-                columnGap: JN.abstand,
-                columns: [
-                    { text: gesetzt(t.text, BREITE - JN.breite - JN.abstand, "ja_nein"), width: "*" },
-                    {
-                        // "auto" = so breit wie der Inhalt: "Nein" endet bündig mit dem rechten
-                        // Ende der Tabelle. Der Text links ist auf JN.breite weniger umbrochen,
-                        // daher wird dieser Bereich nie zusammengedrückt.
-                        width: "auto",
-                        columns: [
-                            kaestchen(), { text: "Ja", width: "auto", margin: [5, 0, 18, 0] },
-                            kaestchen(), { text: "Nein", width: "auto", margin: [5, 0, 0, 0] }
-                        ]
-                    }
+                stack: [{ text: gesetzt(t.text, BREITE, "ja_nein") }].concat(optionenZeilen(["Ja", "Nein"], BREITE))
+            });
+            break;
+
+        case "code":
+            inhalt.push(frageMitLinie(t.text, STIL.code, BREITE));
+            break;
+
+        case "zahl":
+            inhalt.push(frageMitLinie(t.text, STIL.zahl, BREITE));
+            break;
+
+        case "auswahl":
+            inhalt.push({
+                style: "frage",
+                stack: [{ text: gesetzt(t.text, BREITE, "frage") }].concat(optionenZeilen(t.optionen, BREITE))
+            });
+            break;
+
+        case "einschaetzung":
+            inhalt.push({
+                style: "frage",
+                stack: [
+                    { text: gesetzt(t.text, BREITE, "frage") },
+                    einschaetzungZeile(t.links, t.rechts, t.stufen)
                 ]
             });
             break;
-        }
 
         case "likert": {
             const T = STIL.aussagen_tabelle;
@@ -212,6 +345,10 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
             });
             break;
         }
+        }
+        if (neueSeite && inhalt.length > start) {
+            inhalt[start].pageBreak = "before";
+            neueSeite = false;
         }
     });
 

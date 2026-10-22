@@ -6,7 +6,7 @@ permalink: /fragebogen/
 # Inhalt des Fragebogens (Markdown). Überall, wo "platzhalter" steht,
 # wird der eingegebene Name eingesetzt.
 inhalt: /assets/fragebogen/fragebogen.md
-platzhalter: "[Name]"
+platzhalter: "NAME"
 
 # Text oben links auf jeder PDF-Seite (rechts steht das EditA-Logo)
 kopfzeile: EditA – Evaluation digitaler Anwendungen in der Pflege

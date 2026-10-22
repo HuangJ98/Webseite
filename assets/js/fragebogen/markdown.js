@@ -7,9 +7,19 @@
      Normaler Text           -> { typ: "absatz" }
      ## Überschrift          -> { typ: "ueberschrift" }
      - Ja/Nein: Frage        -> { typ: "janein" }
+     - Code: Frage           -> { typ: "code" }      Schreiblinie, z. B. persönlicher Code
+     - Zahl: Frage           -> { typ: "zahl" }      kurze Schreiblinie für eine Zahl
+     - Auswahl: Frage | A | B | C
+                             -> { typ: "auswahl", optionen: [...] }
+                                (Option mit "___" am Ende bekommt eine Schreiblinie,
+                                 z. B. "andere: ___")
+     - Einschätzung: Frage | links | rechts | 5
+                             -> { typ: "einschaetzung" }  Kästchen 1…5, nur die Enden beschriftet
+                                (Anzahl der Stufen am Ende optional, Standard 5)
      Skala: A | B | C        -> Beschriftung für die folgenden Aussagen
      1. Aussage              -> { typ: "likert", skala, aussagen: [...] }
                                 (Aussagen direkt hintereinander = eine Tabelle)
+     ---                     -> { typ: "seitenumbruch" }  Rest beginnt auf neuer Seite
      ### Offene Frage        -> { typ: "freitext", beschreibung }
      Text direkt darunter    -> Beschreibung der offenen Frage
 
@@ -45,6 +55,12 @@ export function markdownLesen(md) {
 
         if (zeile === "") { absatzAbschliessen(); return; }
 
+        if (/^-{3,}$/.test(zeile)) {
+            absatzAbschliessen();
+            teile.push({ typ: "seitenumbruch" });
+            return;
+        }
+
         if ((m = zeile.match(/^###\s+(.*)$/))) {
             absatzAbschliessen();
             teile.push({ typ: "freitext", text: m[1] });
@@ -60,6 +76,29 @@ export function markdownLesen(md) {
         } else if ((m = zeile.match(/^[-*]\s+Ja\s*\/\s*Nein:\s*(.*)$/i))) {
             absatzAbschliessen();
             teile.push({ typ: "janein", text: m[1] });
+        } else if ((m = zeile.match(/^[-*]\s+Code:\s*(.*)$/i))) {
+            absatzAbschliessen();
+            teile.push({ typ: "code", text: m[1] });
+        } else if ((m = zeile.match(/^[-*]\s+Zahl:\s*(.*)$/i))) {
+            absatzAbschliessen();
+            teile.push({ typ: "zahl", text: m[1] });
+        } else if ((m = zeile.match(/^[-*]\s+Auswahl:\s*(.*)$/i))) {
+            absatzAbschliessen();
+            // "Frage | Option A | Option B | …"
+            const stuecke = m[1].split("|").map((x) => x.trim()).filter(Boolean);
+            teile.push({ typ: "auswahl", text: stuecke[0] || "", optionen: stuecke.slice(1) });
+        } else if ((m = zeile.match(/^[-*]\s+Einsch(?:ä|ae)tzung:\s*(.*)$/i))) {
+            absatzAbschliessen();
+            // "Frage | Beschriftung links | Beschriftung rechts | Anzahl Stufen (optional)"
+            const stuecke = m[1].split("|").map((x) => x.trim());
+            const stufen = parseInt(stuecke[3], 10);
+            teile.push({
+                typ: "einschaetzung",
+                text: stuecke[0] || "",
+                links: stuecke[1] || "",
+                rechts: stuecke[2] || "",
+                stufen: stufen >= 2 && stufen <= 11 ? stufen : 5
+            });
         } else if ((m = zeile.match(/^\d+[.)]\s+(.*)$/))) {
             absatzAbschliessen();
             // Aufeinanderfolgende Aussagen bilden eine Tabelle
