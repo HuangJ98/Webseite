@@ -300,10 +300,22 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
                                      Math.min(T.skala_spalte, (BREITE - textMin - innen) / anzahl));
             const textSpalte = BREITE - anzahl * spalte - innen;
 
+            // Höhe einer Textzeile im PDF: Schriftgröße × Zeilenhöhe × 1,172
+            // (1,172 = natürliche Zeilenhöhe der Schrift Roboto, wie pdfmake sie verwendet)
+            const a = textStil("aussage");
+            const zeilenHoehe = a.groesse * a.zeilenhoehe * 1.172;
+
             const zeilen = t.aussagen.map((aussage) => {
                 nummer++;
-                return [{ text: gesetzt(nummer + ".  " + aussage, textSpalte, "aussage"), style: "aussage" }]
-                    .concat(t.skala.map(() => ({ stack: [kaestchen()], alignment: "center", margin: [0, 2, 0, 0] })));
+                const text = gesetzt(nummer + ".  " + aussage, textSpalte, "aussage");
+
+                // pdfmake kann Zellen nicht vertikal zentrieren. Da wir den Umbruch selbst
+                // machen, kennen wir die Zeilenzahl und schieben die Kästchen in die Mitte.
+                const textZeilen = 1 + text.reduce((summe, st) => summe + (st.text ? (st.text.match(/\n/g) || []).length : 0), 0);
+                const oben = Math.max(0, (textZeilen * zeilenHoehe - STIL.kaestchen.groesse) / 2 - 1);   // -1: Kästchen ist 1 pt nach unten versetzt
+
+                return [{ text: text, style: "aussage" }]
+                    .concat(t.skala.map(() => ({ stack: [kaestchen()], alignment: "center", margin: [0, oben, 0, 0] })));
             });
 
             inhalt.push({
