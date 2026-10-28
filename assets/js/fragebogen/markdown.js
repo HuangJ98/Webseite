@@ -8,6 +8,9 @@
      ## Überschrift          -> { typ: "ueberschrift" }
      - Ja/Nein: Frage        -> { typ: "janein" }
      - Code: Frage           -> { typ: "code" }      Schreiblinie, z. B. persönlicher Code
+     - Code: Frage | 2       -> { typ: "code", gruppen: [2] }  2 kurze Striche für je ein Zeichen
+     - Code: Frage | 1 2 1   -> { typ: "code", gruppen: [1,2,1] }  Striche in Gruppen: _   _ _   _
+     - Text                  -> { typ: "liste" }  Aufzählungspunkt (direkt hintereinander = eine Liste)
      - Zahl: Frage           -> { typ: "zahl" }      kurze Schreiblinie für eine Zahl
      - Auswahl: Frage | A | B | C
                              -> { typ: "auswahl", optionen: [...] }
@@ -16,7 +19,11 @@
      - Einschätzung: Frage | links | rechts | 5
                              -> { typ: "einschaetzung" }  Kästchen 1…5, nur die Enden beschriftet
                                 (Anzahl der Stufen am Ende optional, Standard 5)
+     - Einschätzung: Frage | A | B | C | D | E | keine Angabe
+                                mehr als zwei Beschriftungen: jedes Kästchen beschriftet;
+                                "keine Angabe" am Ende: eigenes Kästchen, rechts abgesetzt
      Skala: A | B | C        -> Beschriftung für die folgenden Aussagen
+     Skala: A | B || X | Y   -> "||" = hellgrauer senkrechter Strich an dieser Stelle der Tabelle
      1. Aussage              -> { typ: "likert", skala, aussagen: [...] }
                                 (Aussagen direkt hintereinander = eine Tabelle)
      ---                     -> { typ: "seitenumbruch" }  Rest beginnt auf neuer Seite
@@ -34,6 +41,7 @@ export function markdownLesen(md) {
     const zeilen = md.split(/\r?\n/);
     const teile = [];
     let skala = ["1", "2", "3", "4", "5"];
+    let trennerNach = 0;      // Strich nach dieser Skalen-Spalte (0 = kein Strich)
     let absatz = [];
 
     function absatzAbschliessen() {
@@ -72,13 +80,22 @@ export function markdownLesen(md) {
             teile.push({ typ: "titel", text: m[1] });
         } else if ((m = zeile.match(/^Skala:\s*(.*)$/i))) {
             absatzAbschliessen();
-            skala = m[1].split("|").map((s) => s.trim()).filter(Boolean);
+            // "||" markiert, wo ein senkrechter Trennstrich hin soll
+            const gruppen = m[1].split("||");
+            const teilen = (x) => x.split("|").map((s) => s.trim()).filter(Boolean);
+            skala = teilen(m[1].replace(/\|\|/g, "|"));
+            trennerNach = gruppen.length > 1 ? teilen(gruppen[0]).length : 0;
         } else if ((m = zeile.match(/^[-*]\s+Ja\s*\/\s*Nein:\s*(.*)$/i))) {
             absatzAbschliessen();
             teile.push({ typ: "janein", text: m[1] });
         } else if ((m = zeile.match(/^[-*]\s+Code:\s*(.*)$/i))) {
             absatzAbschliessen();
-            teile.push({ typ: "code", text: m[1] });
+            // "Frage | Anzahl Zeichen" (optional) -> kurze Striche statt Linie
+            // "Frage | 1 2 1" -> Striche in Gruppen, mit größerem Abstand zwischen den Gruppen
+            const stuecke = m[1].split("|").map((x) => x.trim());
+            const gruppen = (stuecke[1] || "").split(/\s+/).map((x) => parseInt(x, 10))
+                .filter((n) => n >= 1 && n <= 20);
+            teile.push({ typ: "code", text: stuecke[0], gruppen: gruppen });
         } else if ((m = zeile.match(/^[-*]\s+Zahl:\s*(.*)$/i))) {
             absatzAbschliessen();
             teile.push({ typ: "zahl", text: m[1] });
@@ -89,16 +106,25 @@ export function markdownLesen(md) {
             teile.push({ typ: "auswahl", text: stuecke[0] || "", optionen: stuecke.slice(1) });
         } else if ((m = zeile.match(/^[-*]\s+Einsch(?:ä|ae)tzung:\s*(.*)$/i))) {
             absatzAbschliessen();
-            // "Frage | Beschriftung links | Beschriftung rechts | Anzahl Stufen (optional)"
-            const stuecke = m[1].split("|").map((x) => x.trim());
-            const stufen = parseInt(stuecke[3], 10);
-            teile.push({
-                typ: "einschaetzung",
-                text: stuecke[0] || "",
-                links: stuecke[1] || "",
-                rechts: stuecke[2] || "",
-                stufen: stufen >= 2 && stufen <= 11 ? stufen : 5
-            });
+            // "Frage | links | rechts | Anzahl Stufen (optional) | keine Angabe (optional)"
+            // oder "Frage | Stufe 1 | Stufe 2 | … | keine Angabe (optional)"
+            const stuecke = m[1].split("|").map((x) => x.trim()).filter(Boolean);
+            const frage = stuecke.shift() || "";
+
+            let keineAngabe = false;
+            if (stuecke.length && /^keine angabe$/i.test(stuecke[stuecke.length - 1])) {
+                stuecke.pop();
+                keineAngabe = true;
+            }
+            let stufen = 5;
+            if (stuecke.length && /^\d+$/.test(stuecke[stuecke.length - 1])) {
+                const n = parseInt(stuecke.pop(), 10);
+                if (n >= 2 && n <= 11) stufen = n;
+            }
+            // Mehr als zwei Beschriftungen: jede Stufe ist beschriftet
+            if (stuecke.length > 2) stufen = stuecke.length;
+
+            teile.push({ typ: "einschaetzung", text: frage, beschriftungen: stuecke, stufen: stufen, keineAngabe: keineAngabe });
         } else if ((m = zeile.match(/^\d+[.)]\s+(.*)$/))) {
             absatzAbschliessen();
             // Aufeinanderfolgende Aussagen bilden eine Tabelle
@@ -106,8 +132,14 @@ export function markdownLesen(md) {
             if (letztes && letztes.typ === "likert") {
                 letztes.aussagen.push(m[1]);
             } else {
-                teile.push({ typ: "likert", skala: skala, aussagen: [m[1]] });
+                teile.push({ typ: "likert", skala: skala, trennerNach: trennerNach, aussagen: [m[1]] });
             }
+        } else if ((m = zeile.match(/^[-*•]\s+(.*)$/))) {
+            absatzAbschliessen();
+            // einfacher Aufzählungspunkt; direkt aufeinanderfolgende Punkte bilden eine Liste
+            const letztes = teile[teile.length - 1];
+            if (letztes && letztes.typ === "liste") letztes.punkte.push(m[1]);
+            else teile.push({ typ: "liste", punkte: [m[1]] });
         } else {
             absatz.push(zeile);
         }

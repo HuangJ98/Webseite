@@ -26,21 +26,24 @@ const STANDARD = {
         titel:          { groesse: 20, fett: true, farbe: "petrol", abstand_unten: 10 },
         absatz:         { groesse: 10, farbe: "grau", abstand_unten: 6 },
         ueberschrift:   { groesse: 12, fett: true, farbe: "petrol", abstand_oben: 14, abstand_unten: 4 },
-        ja_nein:        { groesse: 10, farbe: "text", abstand_oben: 12, abstand_unten: 6 },
-        frage:          { groesse: 10, farbe: "text", abstand_oben: 12, abstand_unten: 6 },
+        ja_nein:        { groesse: 11, fett: true, farbe: "text", abstand_oben: 12, abstand_unten: 6 },
+        frage:          { groesse: 11, fett: true, farbe: "text", abstand_oben: 12, abstand_unten: 6 },
+        antwort:        { groesse: 10, farbe: "text" },
+        liste:          { groesse: 10, farbe: "text", abstand_oben: 4, abstand_unten: 6 },
         aussage:        { groesse: 10, farbe: "text" },
         tabellenkopf:   { groesse: 7.5, fett: true, farbe: "petrol", zeilenhoehe: 1.1 },
         freitext_frage: { groesse: 11, fett: true, farbe: "petrol", abstand_unten: 4 }
     },
     kaestchen: { groesse: 10, linienstaerke: 0.8, farbe: "grau" },
-    code: { linie_breite: 200, linienstaerke: 0.8, farbe: "grau", abstand: 8 },
+    code: { linie_breite: 200, feld_groesse: 16, feld_abstand: 5, gruppen_abstand: 16, linienstaerke: 0.8, farbe: "grau", abstand: 8, abstand_zeilen: 6 },
     zahl: { linie_breite: 60, linienstaerke: 0.8, farbe: "grau", abstand: 8 },
     auswahl: { abstand_optionen: 22, abstand_frage: 2, andere_linie: 120, linienstaerke: 0.8, farbe: "grau" },
-    einschaetzung: { stufe_breite: 30, zahlen: false, zahlen_groesse: 8, zahlen_farbe: "grau", abstand_frage: 2, abstand_beschriftung: 8 },
+    einschaetzung: { stufe_breite: 30, spalte_beschriftet: 56, keine_angabe_abstand: 18, keine_angabe_linie: { staerke: 0.6, farbe: "linie" }, zahlen: false, zahlen_groesse: 8, zahlen_farbe: "grau", abstand_frage: 2, abstand_beschriftung: 8 },
     aussagen_tabelle: {
         skala_spalte: 56, text_mindestbreite: 150, zellabstand: 6, abstand_oben: 6, abstand_unten: 12,
         linie_kopf: { staerke: 1.2, farbe: "petrol" },
-        linie_zeilen: { staerke: 0.6, farbe: "linie" }
+        linie_zeilen: { staerke: 0.6, farbe: "linie" },
+        trennlinie: { staerke: 0.6, farbe: "linie" }
     },
     freitext: { kasten_hoehe: 140, linienstaerke: 0.8, farbe: "kasten", abstand_oben: 14 },
     kopfzeile: { groesse: 8.5, farbe: "grau", logo_breite: 54, linie: { staerke: 0.6, farbe: "linie" } },
@@ -113,13 +116,30 @@ function kaestchen() {
 }
 
 // Schreiblinie zum Ausfüllen (Code, Zahl); liegt auf Höhe der Textgrundlinie
-function schreiblinie(cfg) {
-    const y = textStil("frage").groesse * 1.15;
+function schreiblinie(cfg, stilName) {
+    const y = textStil(stilName || "frage").groesse * 1.15;
     return {
         width: cfg.linie_breite,
         canvas: [{ type: "line", x1: 0, y1: y, x2: cfg.linie_breite, y2: y,
                    lineWidth: cfg.linienstaerke, lineColor: farbe(cfg.farbe) }]
     };
+}
+
+// Ein kurzer Schreibstrich pro Zeichen, mit kleinem Abstand dazwischen: __ __
+function zeichenStriche(gruppen) {
+    const C = STIL.code;
+    const g = C.feld_groesse;
+    const y = textStil("frage").groesse * 1.15;     // auf Höhe der Textgrundlinie (wie die Schreiblinie)
+    const striche = [];
+    let x = 0;
+    gruppen.forEach((anzahl, gi) => {
+        if (gi > 0) x += C.gruppen_abstand - C.feld_abstand;   // größerer Abstand zwischen Gruppen
+        for (let i = 0; i < anzahl; i++) {
+            striche.push({ type: "line", x1: x, y1: y, x2: x + g, y2: y, lineWidth: C.linienstaerke, lineColor: farbe(C.farbe) });
+            x += g + C.feld_abstand;
+        }
+    });
+    return { width: x - C.feld_abstand, canvas: striche };
 }
 
 // Frage, direkt dahinter die Schreiblinie ("auto" = Frage nur so breit wie ihr Text)
@@ -141,7 +161,7 @@ function frageMitLinie(text, cfg, breite) {
 function optionenZeilen(optionen, breite) {
     const A = STIL.auswahl;
     const K = STIL.kaestchen.groesse;
-    const f = textStil("frage");
+    const f = textStil("antwort");
     const RESERVE = 4;                                  // pdfmake misst minimal anders
 
     // 1. Jede Option vorbereiten und ihre Breite messen
@@ -152,10 +172,11 @@ function optionenZeilen(optionen, breite) {
         const linie    = mitLinie ? 4 + A.andere_linie : 0;
         const textMax  = breite - K - 5 - linie;
 
-        const teile = [kaestchen(), { text: gesetzt(option, textMax, "frage"), width: "auto", margin: [5, 0, 0, 0] }];
+        // eigener Stil "antwort": nicht fett wie die Frage darüber
+        const teile = [kaestchen(), { text: gesetzt(option, textMax, "antwort"), style: "antwort", width: "auto", margin: [5, 0, 0, 0] }];
         if (mitLinie) {
             teile.push(Object.assign(
-                schreiblinie({ linie_breite: A.andere_linie, linienstaerke: A.linienstaerke, farbe: A.farbe }),
+                schreiblinie({ linie_breite: A.andere_linie, linienstaerke: A.linienstaerke, farbe: A.farbe }, "antwort"),
                 { margin: [4, 0, 0, 0] }
             ));
         }
@@ -198,16 +219,34 @@ function optionenZeilen(optionen, breite) {
     return zeilen;
 }
 
-// Einschätzung: "sehr unsicher  ☐ ☐ ☐ ☐ ☐  sehr sicher"
-// (mit "zahlen: true" in der YAML stehen 1…n über den Kästchen)
-function einschaetzungZeile(links, rechts, stufen) {
+// Einschätzung, zwei Varianten:
+// - Nur Enden beschriftet:   "sehr unsicher  ☐ ☐ ☐ ☐ ☐  sehr sicher"
+//   (mit "zahlen: true" in der YAML stehen 1…n über den Kästchen)
+// - Jede Stufe beschriftet:  Beschriftung über jedem Kästchen, wie im Kopf der Aussagen-Tabelle
+// In beiden Fällen optional rechts abgesetzt "☐ keine Angabe".
+// Abstand vor "keine Angabe" mit senkrechtem hellgrauen Strich in der Mitte
+function trennstrich(hoehe) {
     const E = STIL.einschaetzung;
-    const f = textStil("frage");
+    const L = E.keine_angabe_linie;
+    const x = E.keine_angabe_abstand / 2;
+    return {
+        width: E.keine_angabe_abstand,
+        canvas: [{ type: "line", x1: x, y1: 0, x2: x, y2: hoehe,
+                   lineWidth: L.staerke, lineColor: farbe(L.farbe) }]
+    };
+}
+
+function einschaetzungZeile(t) {
+    if (t.beschriftungen.length > 2) return einschaetzungBeschriftet(t);
+
+    const E = STIL.einschaetzung;
     const zahlenHoehe = E.zahlen ? E.zahlen_groesse * 1.4 : 0;   // Platz der Zahlenzeile über den Kästchen
+    const links  = t.beschriftungen[0];
+    const rechts = t.beschriftungen[1];
 
     const spalten = [];
     if (links) spalten.push({ text: links, width: "auto", margin: [0, zahlenHoehe, E.abstand_beschriftung, 0] });
-    for (let i = 1; i <= stufen; i++) {
+    for (let i = 1; i <= t.stufen; i++) {
         spalten.push({
             width: E.stufe_breite,
             stack: (E.zahlen
@@ -217,8 +256,41 @@ function einschaetzungZeile(links, rechts, stufen) {
         });
     }
     if (rechts) spalten.push({ text: rechts, width: "auto", margin: [E.abstand_beschriftung, zahlenHoehe, 0, 0] });
+    if (t.keineAngabe) {
+        spalten.push(trennstrich(zahlenHoehe + STIL.kaestchen.groesse + 2));
+        spalten.push({ width: "auto", columnGap: 0, margin: [0, zahlenHoehe, 0, 0],
+                       columns: [kaestchen(), { text: "keine Angabe", width: "auto", margin: [5, 0, 0, 0] }] });
+    }
 
-    return { columns: spalten, columnGap: 0, fontSize: f.groesse, margin: [0, E.abstand_frage, 0, 0] };
+    return { columns: spalten, columnGap: 0, style: "antwort", margin: [0, E.abstand_frage, 0, 0] };
+}
+
+// Jede Stufe beschriftet: Beschriftungen unten bündig, damit alle Kästchen auf einer Linie stehen
+function einschaetzungBeschriftet(t) {
+    const E = STIL.einschaetzung;
+    const W = E.spalte_beschriftet;
+    const kopf = textStil("tabellenkopf");
+    const zeilenHoehe = kopf.groesse * kopf.zeilenhoehe * 1.172;   // 1,172 = Zeilenhöhe von Roboto
+
+    const beschriftungen = t.beschriftungen.concat(t.keineAngabe ? ["keine Angabe"] : []);
+    const texte = beschriftungen.map((b) => umbrechen(b, W - 4, kopf.groesse, !!kopf.fett));
+    const zeilenVon = (g) => 1 + g.reduce((summe, st) => summe + ((st.text || "").match(/\n/g) || []).length, 0);
+    const maxZeilen = Math.max.apply(null, texte.map(zeilenVon));
+
+    const spalte = (g) => ({
+        width: W,
+        stack: [
+            { text: g, style: "tabellenkopf", margin: [0, (maxZeilen - zeilenVon(g)) * zeilenHoehe, 0, 3] },
+            { stack: [kaestchen()], alignment: "center" }
+        ]
+    });
+
+    const spalten = texte.slice(0, t.beschriftungen.length).map(spalte);
+    if (t.keineAngabe) {
+        spalten.push(trennstrich(maxZeilen * zeilenHoehe + 3 + STIL.kaestchen.groesse + 1));
+        spalten.push(spalte(texte[texte.length - 1]));
+    }
+    return { columns: spalten, columnGap: 0, margin: [0, E.abstand_frage + 2, 0, 0] };
 }
 
 function dokumentBauen(teile, logoSvg, kopfzeile) {
@@ -232,7 +304,23 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
     // Seitenumbruch: der nächste Baustein beginnt auf einer neuen Seite
     let neueSeite = false;
 
-    teile.forEach((t) => {
+    // Diese Fragetypen werden nie über zwei Seiten verteilt
+    const UNTEILBAR = ["janein", "auswahl", "einschaetzung", "code", "zahl", "liste"];
+
+    // Code-Fragen direkt hintereinander bilden eine Gruppe: gleiche Breite für den Fragetext,
+    // damit alle Eingabefelder untereinander stehen
+    const f = textStil("frage");
+    const codeTextBreite = teile.map((t, i) => {
+        if (t.typ !== "code") return 0;
+        let von = i, bis = i;
+        while (von > 0 && teile[von - 1].typ === "code") von--;
+        while (bis < teile.length - 1 && teile[bis + 1].typ === "code") bis++;
+        let max = 0;
+        for (let j = von; j <= bis; j++) max = Math.max(max, textBreite(teile[j].text, f.groesse, !!f.fett));
+        return Math.min(max + 6, BREITE * 0.7);
+    });
+
+    teile.forEach((t, index) => {
         if (t.typ === "seitenumbruch") {
             neueSeite = inhalt.length > 0;      // nicht vor dem allerersten Baustein
             return;
@@ -249,6 +337,11 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
             inhalt.push({ text: gesetzt(t.text, BREITE, "absatz"), style: "absatz" });
             break;
 
+        case "liste":
+            // Aufzählung mit "•"; 12 pt Einzug für den Punkt
+            inhalt.push({ ul: t.punkte.map((p) => ({ text: gesetzt(p, BREITE - 12, "liste") })), style: "liste" });
+            break;
+
         case "ueberschrift":
             inhalt.push({ text: gesetzt(t.text, BREITE, "ueberschrift"), style: "ueberschrift" });
             break;
@@ -261,9 +354,23 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
             });
             break;
 
-        case "code":
-            inhalt.push(frageMitLinie(t.text, STIL.code, BREITE));
+        case "code": {
+            const C = STIL.code;
+            const textB = codeTextBreite[index];
+            const vorher = teile[index - 1] && teile[index - 1].typ === "code";
+            const nachher = teile[index + 1] && teile[index + 1].typ === "code";
+            inhalt.push({
+                style: "frage",
+                // innerhalb einer Gruppe enger zusammen
+                margin: [0, vorher ? C.abstand_zeilen : f.abstand_oben || 0, 0, nachher ? 0 : f.abstand_unten || 0],
+                columnGap: C.abstand,
+                columns: [
+                    { text: gesetzt(t.text, textB, "frage"), width: textB },
+                    t.gruppen.length ? zeichenStriche(t.gruppen) : schreiblinie(C)
+                ]
+            });
             break;
+        }
 
         case "zahl":
             inhalt.push(frageMitLinie(t.text, STIL.zahl, BREITE));
@@ -281,15 +388,13 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
                 style: "frage",
                 stack: [
                     { text: gesetzt(t.text, BREITE, "frage") },
-                    einschaetzungZeile(t.links, t.rechts, t.stufen)
+                    einschaetzungZeile(t)
                 ]
             });
             break;
 
         case "likert": {
             const T = STIL.aussagen_tabelle;
-            const kopf = [{ text: "Aussage", style: "tabellenkopf", alignment: "left" }]
-                .concat(t.skala.map((s) => ({ text: s, style: "tabellenkopf" })));
 
             // Spaltenbreiten: Bei vielen Skalen-Stufen werden die Skalen-Spalten schmaler,
             // damit für den Text mindestens "text_mindestbreite" bleibt.
@@ -299,6 +404,33 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
             const spalte  = Math.max(STIL.kaestchen.groesse + 4,
                                      Math.min(T.skala_spalte, (BREITE - textMin - innen) / anzahl));
             const textSpalte = BREITE - anzahl * spalte - innen;
+
+            // Tabellenkopf selbst umbrechen, damit wir seine Höhe kennen (für den Trennstrich)
+            const k = textStil("tabellenkopf");
+            const kopfZeilenHoehe = k.groesse * k.zeilenhoehe * 1.172;
+            const kopfTexte = t.skala.map((s) => umbrechen(s, spalte, k.groesse, !!k.fett));
+            const zeilenVon = (g) => 1 + g.reduce((summe, st) => summe + ((st.text || "").match(/\n/g) || []).length, 0);
+            const kopfHoehe = Math.max(1, Math.max.apply(null, kopfTexte.map(zeilenVon))) * kopfZeilenHoehe;
+
+            // Senkrechter Trennstrich ("||" in der Skala). Wir zeichnen ihn selbst je Zeile,
+            // 2 pt vor jeder waagerechten Linie endend, damit er diese nicht überdeckt.
+            // Er liegt mittig im Spalt (6 + 2 pt Innenabstand) links der Spalte nach "||".
+            const LUECKE = 2;
+            const trennSpalte = t.trennerNach ? t.trennerNach + 1 : -1;   // Index im Tabellenkörper (0 = Aussage)
+            const strich = (y, laenge) => ({
+                relativePosition: { x: -4, y: y },     // nimmt keinen Platz ein
+                alignment: "left",
+                canvas: [{ type: "line", x1: 0, y1: 0, x2: 0, y2: laenge,
+                           lineWidth: T.trennlinie.staerke, lineColor: farbe(T.trennlinie.farbe) }]
+            });
+
+            const kopf = [{ text: "Aussage", style: "tabellenkopf", alignment: "left" }]
+                .concat(kopfTexte.map((g, i) => {
+                    const zelle = { text: g, style: "tabellenkopf" };
+                    if (i + 1 !== trennSpalte) return zelle;
+                    // oben gibt es keine Linie: Strich beginnt am Tabellenanfang
+                    return { stack: [strich(-T.zellabstand, kopfHoehe + 2 * T.zellabstand - LUECKE), zelle] };
+                }));
 
             // Höhe einer Textzeile im PDF: Schriftgröße × Zeilenhöhe × 1,172
             // (1,172 = natürliche Zeilenhöhe der Schrift Roboto, wie pdfmake sie verwendet)
@@ -314,8 +446,14 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
                 const textZeilen = 1 + text.reduce((summe, st) => summe + (st.text ? (st.text.match(/\n/g) || []).length : 0), 0);
                 const oben = Math.max(0, (textZeilen * zeilenHoehe - STIL.kaestchen.groesse) / 2 - 1);   // -1: Kästchen ist 1 pt nach unten versetzt
 
+                const zellHoehe = Math.max(textZeilen * zeilenHoehe, oben + STIL.kaestchen.groesse + 1);
+
                 return [{ text: text, style: "aussage" }]
-                    .concat(t.skala.map(() => ({ stack: [kaestchen()], alignment: "center", margin: [0, oben, 0, 0] })));
+                    .concat(t.skala.map((_, i) => {
+                        const zelle = { stack: [kaestchen()], alignment: "center", margin: [0, oben, 0, 0] };
+                        if (i + 1 !== trennSpalte) return zelle;
+                        return { stack: [strich(-T.zellabstand + LUECKE, zellHoehe + 2 * T.zellabstand - 2 * LUECKE), zelle] };
+                    }));
             });
 
             inhalt.push({
@@ -329,7 +467,7 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
                 layout: {
                     hLineWidth: (i) => (i === 0 ? 0 : i === 1 ? T.linie_kopf.staerke : T.linie_zeilen.staerke),
                     hLineColor: (i) => farbe(i === 1 ? T.linie_kopf.farbe : T.linie_zeilen.farbe),
-                    vLineWidth: () => 0,
+                    vLineWidth: () => 0,             // Trennstrich zeichnen wir selbst (siehe oben)
                     // erste/letzte Spalte ohne Innenabstand: Text steht auf der Linie des Seitenrands
                     paddingLeft:  (i) => (i === 0 ? 0 : 2),
                     paddingRight: (i, node) => (i === node.table.widths.length - 1 ? 0 : 6),
@@ -358,6 +496,12 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
             break;
         }
         }
+        // Fragen nicht über eine Seitengrenze teilen: passen Frage und Antwortkästchen
+        // nicht mehr ganz auf die Seite, kommt die ganze Frage auf die nächste
+        if (UNTEILBAR.indexOf(t.typ) !== -1) {
+            for (let k = start; k < inhalt.length; k++) inhalt[k].unbreakable = true;
+        }
+
         if (neueSeite && inhalt.length > start) {
             inhalt[start].pageBreak = "before";
             neueSeite = false;

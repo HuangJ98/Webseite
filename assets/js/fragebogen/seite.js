@@ -169,16 +169,51 @@ async function seiteRendern(doc, nummer, nr) {
 
 /* ---------- Eingabe und Download ---------- */
 
+const MAX_LAENGE = 60;      // wie maxlength im Eingabefeld (das man im Browser umgehen könnte)
+
+// Eingabe bereinigen, bevor sie in den Fragebogen eingesetzt wird.
+// Erlaubt: Buchstaben (lateinisch, griechisch, kyrillisch – mehr kann die PDF-Schrift nicht),
+//          Ziffern, Leerzeichen und übliche Satzzeichen.
+// Entfernt wird alles andere, vor allem Zeichen mit Bedeutung im Fragebogen-Markdown
+// ("|" Antworten/Spalten, "*" fett, "_" Schreiblinie, "<" Kommentar, "#", …),
+// Emojis sowie unsichtbare Steuer- und Richtungszeichen.
+const ERLAUBT = /[\p{Script=Latin}\p{Script=Greek}\p{Script=Cyrillic}\p{M}\p{N} .,:;!?'’()\/&+%@–-]/u;
+
+function bereinigen(roh) {
+    const entfernt = new Set();
+    let name = "";
+    for (const zeichen of roh) {
+        if (ERLAUBT.test(zeichen)) name += zeichen;
+        else if (!/\s/.test(zeichen)) entfernt.add(zeichen);
+        else name += " ";
+    }
+    name = name.replace(/\s+/g, " ").trim();
+    if (name.length > MAX_LAENGE) name = name.slice(0, MAX_LAENGE).trim();
+    // Unsichtbare Zeichen nicht in der Meldung anzeigen (man könnte sie ohnehin nicht sehen)
+    const sichtbar = Array.from(entfernt).filter((z) => !/\p{C}/u.test(z));
+    return { name: name, entfernt: sichtbar };
+}
+
+function eingabe() {
+    const ergebnis = bereinigen(input.value);
+    if (ergebnis.entfernt.length) {
+        meldung("Diese Zeichen sind nicht erlaubt und werden weggelassen: " + ergebnis.entfernt.join(" "), true);
+    }
+    return ergebnis.name;
+}
+
 async function aktualisieren() {
     if (!geladen) return;
-    const name = input.value.trim();
+    meldung("");
+    const name = eingabe();
+    const hinweis = status.textContent;     // ggf. Hinweis auf entfernte Zeichen behalten
     const nr = ++auftrag;
     button.disabled = name === "";
     try {
         const bytes = await pdfFuer(name);
         if (nr !== auftrag) return;     // inzwischen wurde weitergetippt
         await vorschauZeichnen(bytes, nr);
-        if (nr === auftrag) meldung("");
+        if (nr === auftrag && !hinweis) meldung("");
     } catch (e) {
         if (nr !== auftrag) return;
         console.error(e);
@@ -187,7 +222,7 @@ async function aktualisieren() {
 }
 
 async function herunterladen() {
-    const name = input.value.trim();
+    const name = eingabe();
     if (!name || !geladen) return;
     try {
         const bytes = await pdfFuer(name);
@@ -227,7 +262,7 @@ function meldung(text, fehler) {
 function ereignisseVerbinden() {
     // Vorschau erst kurz nach dem Tippen neu bauen
     input.addEventListener("input", () => {
-        button.disabled = !geladen || input.value.trim() === "";
+        button.disabled = !geladen || bereinigen(input.value).name === "";
         clearTimeout(timer);
         timer = setTimeout(aktualisieren, 400);
     });

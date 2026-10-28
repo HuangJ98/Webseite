@@ -52,7 +52,21 @@ export function textBreite(text, groesse, fett) {
 //  den ältere Safari-Versionen vor iOS 16.4 nicht kennen)
 function silbenVon(wort) {
     const teile = wort.split("-").map((t, i, alle) => (i < alle.length - 1 ? t + "-" : t)).filter(Boolean);
-    return teile.flatMap((teil) => silben.hyphenate(teil));
+    return teile.flatMap(silbenOhneSatzzeichen);
+}
+
+// Satzzeichen am Anfang/Ende ("(", ".", ",", ")", ":", "/" …) vor der Silbentrennung
+// abtrennen und danach wieder anhängen. Sonst zählt Hypher sie als Buchstaben mit
+// und trennt den letzten Buchstaben ab: "eingearbeite-t." statt "eingearbei-tet."
+function silbenOhneSatzzeichen(teil) {
+    const m = teil.match(/^([^\p{L}]*)(.*?)([^\p{L}]*)$/u);
+    const davor = m[1], kern = m[2], danach = m[3];
+    if (!kern) return [teil];
+
+    const s = silben.hyphenate(kern);
+    s[0] = davor + s[0];
+    s[s.length - 1] += danach;
+    return s;
 }
 
 

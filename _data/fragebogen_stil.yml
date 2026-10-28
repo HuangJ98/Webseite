@@ -39,8 +39,10 @@ texte:
   titel:          { groesse: 20,  fett: true,  farbe: petrol, abstand_unten: 10 }
   absatz:         { groesse: 10,               farbe: grau,   abstand_unten: 6 }
   ueberschrift:   { groesse: 12,  fett: true,  farbe: petrol, abstand_oben: 14, abstand_unten: 4 }
-  ja_nein:        { groesse: 10,               farbe: text,   abstand_oben: 12, abstand_unten: 6 }
-  frage:          { groesse: 10,               farbe: text,   abstand_oben: 12, abstand_unten: 6 }   # Code, Zahl, Auswahl, Einschätzung
+  ja_nein:        { groesse: 11,  fett: true,  farbe: text,   abstand_oben: 12, abstand_unten: 6 }
+  frage:          { groesse: 11,  fett: true,  farbe: text,   abstand_oben: 12, abstand_unten: 6 }   # Code, Zahl, Auswahl, Einschätzung
+  antwort:        { groesse: 10,               farbe: text }   # Antwortmöglichkeiten unter den Fragen
+  liste:          { groesse: 10,               farbe: text,   abstand_oben: 4,  abstand_unten: 6 }   # Aufzählungspunkte "- Text"
                   # Abstand zwischen zwei Fragen = abstand_unten + abstand_oben (hier 18)
   aussage:        { groesse: 10,               farbe: text }
   tabellenkopf:   { groesse: 7.5, fett: true,  farbe: petrol, zeilenhoehe: 1.1 }
@@ -54,9 +56,14 @@ kaestchen:
   farbe: grau
 
 
-# Code: Frage, direkt dahinter die Schreiblinie
+# Code: Frage, dahinter Schreiblinie oder ein kurzer Strich pro Zeichen ("- Code: Frage | 2")
+# Mehrere Code-Fragen direkt hintereinander: Felder stehen untereinander
 code:
   linie_breite: 200
+  feld_groesse: 16    # Länge des Strichs für ein Zeichen
+  feld_abstand: 5     # Abstand zwischen den Strichen innerhalb einer Gruppe
+  gruppen_abstand: 16 # Abstand zwischen den Gruppen ("| 1 2 1" -> _   _ _   _)
+  abstand_zeilen: 6   # Abstand zwischen Code-Fragen direkt hintereinander
   linienstaerke: 0.8
   farbe: grau
   abstand: 8          # zwischen Frage und Linie
@@ -81,8 +88,12 @@ auswahl:
 
 
 # Einschätzung: "sehr unsicher  ☐ ☐ ☐ ☐ ☐  sehr sicher"
+#           oder jede Stufe beschriftet (Beschriftung über dem Kästchen, Stil wie "tabellenkopf")
 einschaetzung:
-  stufe_breite: 30          # Breite je Kästchen-Spalte
+  stufe_breite: 30          # Breite je Kästchen-Spalte, wenn nur die Enden beschriftet sind
+  spalte_beschriftet: 56    # Breite je Kästchen-Spalte, wenn jede Stufe beschriftet ist
+  keine_angabe_abstand: 18  # Abstand vor dem Kästchen "keine Angabe"
+  keine_angabe_linie: { staerke: 0.6, farbe: linie }   # senkrechter Strich in diesem Abstand
   zahlen: false             # true = Zahlen 1…5 über den Kästchen anzeigen
   zahlen_groesse: 8         # Schriftgröße der Zahlen (nur bei zahlen: true)
   zahlen_farbe: grau
@@ -99,6 +110,7 @@ aussagen_tabelle:
   abstand_unten: 12
   linie_kopf:   { staerke: 1.2, farbe: petrol }   # unter dem Tabellenkopf
   linie_zeilen: { staerke: 0.6, farbe: linie }    # zwischen den Aussagen
+  trennlinie:   { staerke: 0.6, farbe: linie }    # senkrechter Strich an der Stelle "||" in der Skala
 
 
 # Offene Fragen mit Antwortkasten
