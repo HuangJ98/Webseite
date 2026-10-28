@@ -73,7 +73,21 @@ function silbenOhneSatzzeichen(teil) {
 // Text in Zeilen der Breite "max" (pt) aufteilen. Passt ein Wort nicht mehr,
 // wird es an der letzten passenden Silbe mit "-" getrennt.
 // Ergebnis: pdfmake-Textstücke mit "\n" am Zeilenende.
-export function umbrechen(text, max, groesse, grundFett) {
+// Teile des eingegebenen Namens (z. B. "pflegedoku", "app"); nur diese Wörter dürfen
+// bei "nurNamenTrennen" getrennt werden
+let namensTeile = [];
+export function namenSetzen(name) {
+    namensTeile = (name || "").toLowerCase().split(/[^\p{L}\p{N}]+/u).filter((t) => t.length >= 2);
+}
+function istNamenswort(wort) {
+    const w = wort.toLowerCase();
+    return namensTeile.some((t) => w.includes(t));
+}
+
+// nurNamenTrennen = true: normale Wörter werden nicht getrennt, sondern kommen ganz in die
+// nächste Zeile. Getrennt werden nur Wörter aus dem Namen – und zur Not Wörter, die
+// breiter als die ganze Zeile sind.
+export function umbrechen(text, max, groesse, grundFett, nurNamenTrennen) {
     if (!messen) return inline(text);       // Schrift fehlt: pdfmake bricht selbst um
     max = Math.max(max * SICHERHEIT, 1);    // nie 0 oder negativ (z. B. bei falschen Spaltenbreiten)
 
@@ -114,7 +128,9 @@ export function umbrechen(text, max, groesse, grundFett) {
             }
 
             // 2. Silbentrennung: möglichst viele Silben in diese Zeile
-            const teile = silbenVon(rest);
+            //    (bei nurNamenTrennen nur für Namenswörter oder am Anfang einer leeren Zeile)
+            const trennenErlaubt = !nurNamenTrennen || zeile().length === 0 || istNamenswort(rest);
+            const teile = trennenErlaubt ? silbenVon(rest) : [rest];
             let vorne = null, i;
             for (i = teile.length - 1; i >= 1; i--) {
                 const kandidat = teile.slice(0, i).join("");

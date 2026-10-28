@@ -96,7 +96,7 @@ Skala: Lehne vollständig ab | Lehne eher ab | teils / teils | Stimme eher zu | 
 1. Die Dokumentation mit NAME kostet mich viel Zeit. 
 1. NAME entlastet mich gedanklich bei meiner Arbeit.
 1. NAME liefert mir mehr Informationen, als ich verarbeiten kann. 
-1. NAME unterstützt mich bei körperlich anstrengenden Tätigkeiten..
+1. NAME unterstützt mich bei körperlich anstrengenden Tätigkeiten.
 1. NAME erspart mir unnötige Wege bei der Arbeit.
 1. Mit NAME kann ich so arbeiten, wie ich es für richtig halte.
 1. Name spart mir Zeit, die ich für die direkte Versorgung nutzen kann.

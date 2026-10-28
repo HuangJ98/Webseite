@@ -12,7 +12,7 @@
    Braucht: pdfMake (als <script> geladen)
    ========================================================= */
 
-import { umbrechen, textBreite } from "./umbruch.js";
+import { umbrechen, textBreite, namenSetzen } from "./umbruch.js";
 
 
 /* ---------- Aussehen: kommt aus _data/fragebogen_stil.yml ---------- */
@@ -97,9 +97,9 @@ function pdfStil(name) {
 }
 
 // Text für einen Stil umbrechen (Größe und fett kommen aus der YAML)
-function gesetzt(text, breite, stilName) {
+function gesetzt(text, breite, stilName, nurNamenTrennen) {
     const t = textStil(stilName);
-    return umbrechen(text, breite, t.groesse, !!t.fett);
+    return umbrechen(text, breite, t.groesse, !!t.fett, nurNamenTrennen);
 }
 
 
@@ -439,7 +439,8 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
 
             const zeilen = t.aussagen.map((aussage) => {
                 nummer++;
-                const text = gesetzt(nummer + ".  " + aussage, textSpalte, "aussage");
+                // Matrix: normale Wörter nicht trennen, sondern in die nächste Zeile (nur der Name wird getrennt)
+                const text = gesetzt(nummer + ".  " + aussage, textSpalte, "aussage", true);
 
                 // pdfmake kann Zellen nicht vertikal zentrieren. Da wir den Umbruch selbst
                 // machen, kennen wir die Zeilenzahl und schieben die Kästchen in die Mitte.
@@ -556,8 +557,9 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
 
 
 // Bausteine -> fertige PDF-Datei
-// optionen: { logoSvg: Text der SVG-Datei oder null, kopfzeile: Text oben links }
+// optionen: { name: eingegebener Name, logoSvg: Text der SVG-Datei oder null, kopfzeile: Text oben links }
 export function pdfErzeugen(teile, optionen) {
+    namenSetzen(optionen.name);         // damit der Umbruch weiß, welche Wörter zum Namen gehören
     const doc = dokumentBauen(teile, optionen.logoSvg, optionen.kopfzeile || "");
     return new Promise((fertig, fehler) => {
         try {

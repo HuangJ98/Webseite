@@ -102,6 +102,7 @@ function pdfFuer(name) {
     const muster = new RegExp("(^|[^\\p{L}\\p{N}])" + platzhalter.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "(?![\\p{L}\\p{N}])", "gu");
     const ersetzt = quelltext.replace(muster, (treffer, davor) => davor + (name || platzhalter));
     return pdfErzeugen(markdownLesen(ersetzt), {
+        name: name,
         logoSvg: logoSvg,
         kopfzeile: root.dataset.kopfzeile
     });
