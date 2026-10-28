@@ -69,7 +69,6 @@ Ihr Code wäre in diesem Beispiel: **A07B**
 ## Anleitung
 In diesem Fragebogen geht es um NAME, also [kurze Beschreibung der Anwendung]. Bitte beziehen Sie alle Antworten nur auf NAME, nicht auf andere Technik in Ihrer Einrichtung.
 Denken Sie bei Ihren Antworten bitte an Ihre Arbeit in den letzten vier Wochen.
-Manche Aussagen sprechen von „mehr“, „weniger“, „höher“, „häufiger“ oder „freier“. Vergleichen Sie dann bitte mit Ihrer Arbeit ohne NAME. Wenn Sie nie ohne NAME gearbeitet haben, wählen Sie bei diesen Aussagen „kann ich nicht beurteilen“.
 Es gibt keine richtigen oder falschen Antworten. Uns interessiert Ihre persönliche Einschätzung. Wenn eine Aussage für NAME gar nicht passt, wählen Sie bitte „trifft auf NAME nicht zu“.
 
 
