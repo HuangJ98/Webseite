@@ -37,7 +37,7 @@
 
 Bitte bilden Sie Ihren persönlichen Code. Er dient nur dazu, Ihre beiden Fragebögen einander zuzuordnen. Ihr Name wird nicht erfasst.
 
-- Zweiter Buchstabe des Vornamens Ihrer Mutter (falls unbekannt, bitte X eintragen), z. B. Maria: **A**
+- Zweiter Buchstabe des Vornamens Ihrer Mutter (Ist dieser nicht bekannt, verwenden Sie bitte den Vornamen Ihrer engsten Bezugsperson.), z. B. Maria: **A**
 - Tag Ihres Geburtstags (zweistellig), z. B. 7. März: **07**
 - Erster Buchstabe Ihres Geburtsorts, z. B. Berlin: **B**
 
