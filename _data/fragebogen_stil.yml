@@ -129,7 +129,8 @@ kopfzeile:
   linie: { staerke: 0.6, farbe: linie }
 
 
-# Fußzeile: "Seite X von Y"
+# Fußzeile: links GKV-Logo mit Förderhinweis, rechts "Seite X von Y"
 fusszeile:
   groesse: 8.5
   farbe: grau
+  logo_hoehe: 20      # Höhe des GKV-Logos unten links (Text daneben wird mittig ausgerichtet)

@@ -47,7 +47,7 @@ const STANDARD = {
     },
     freitext: { kasten_hoehe: 140, linienstaerke: 0.8, farbe: "kasten", abstand_oben: 14 },
     kopfzeile: { groesse: 8.5, farbe: "grau", logo_breite: 54, linie: { staerke: 0.6, farbe: "linie" } },
-    fusszeile: { groesse: 8.5, farbe: "grau" }
+    fusszeile: { groesse: 8.5, farbe: "grau", logo_hoehe: 20 }
 };
 
 const A4_BREITE = 595.28;   // pt
@@ -293,7 +293,7 @@ function einschaetzungBeschriftet(t) {
     return { columns: spalten, columnGap: 0, margin: [0, E.abstand_frage + 2, 0, 0] };
 }
 
-function dokumentBauen(teile, logoSvg, kopfzeile) {
+function dokumentBauen(teile, logoSvg, kopfzeile, foerderung) {
     const R          = STIL.seite;
     const SEITENRAND = [R.rand_links, R.rand_oben, R.rand_rechts, R.rand_unten];
     const BREITE     = A4_BREITE - R.rand_links - R.rand_rechts;   // nutzbare Breite
@@ -537,10 +537,19 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
             ]
         }),
 
+        // Fußzeile: links GKV-Logo mit Förderhinweis, rechts "Seite X von Y"
         footer: (seite, anzahl) => ({
-            text: "Seite " + seite + " von " + anzahl,
-            alignment: "right", fontSize: FZ.groesse, color: farbe(FZ.farbe),
-            margin: [SEITENRAND[0], 20, SEITENRAND[2], 0]
+            margin: [SEITENRAND[0], 14, SEITENRAND[2], 0],
+            columnGap: 8,
+            columns: [
+                foerderung.logo
+                    ? { image: foerderung.logo, fit: [FZ.logo_hoehe * 3, FZ.logo_hoehe], width: "auto" }
+                    : { text: "", width: 0 },
+                { text: foerderung.text, width: "*", fontSize: FZ.groesse, color: farbe(FZ.farbe),
+                  margin: [0, (FZ.logo_hoehe - FZ.groesse * 1.25) / 2, 0, 0] },
+                { text: "Seite " + seite + " von " + anzahl, width: "auto", fontSize: FZ.groesse,
+                  color: farbe(FZ.farbe), margin: [0, (FZ.logo_hoehe - FZ.groesse * 1.25) / 2, 0, 0] }
+            ]
         }),
 
         content: inhalt,
@@ -557,10 +566,12 @@ function dokumentBauen(teile, logoSvg, kopfzeile) {
 
 
 // Bausteine -> fertige PDF-Datei
-// optionen: { name: eingegebener Name, logoSvg: Text der SVG-Datei oder null, kopfzeile: Text oben links }
+// optionen: { name: eingegebener Name, logoSvg: Text der SVG-Datei oder null, kopfzeile: Text oben links,
+//             foerderung: { logo: GKV-Logo als data:-Adresse, text: Förderhinweis } }
 export function pdfErzeugen(teile, optionen) {
     namenSetzen(optionen.name);         // damit der Umbruch weiß, welche Wörter zum Namen gehören
-    const doc = dokumentBauen(teile, optionen.logoSvg, optionen.kopfzeile || "");
+    const doc = dokumentBauen(teile, optionen.logoSvg, optionen.kopfzeile || "",
+                              optionen.foerderung || { logo: null, text: "" });
     return new Promise((fertig, fehler) => {
         try {
             pdfMake.createPdf(doc).getBuffer((buffer) => fertig(new Uint8Array(buffer)));
