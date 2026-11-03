@@ -20,7 +20,7 @@ import { umbrechen, textBreite, namenSetzen } from "./umbruch.js";
 // Standardwerte, falls in der YAML etwas fehlt (gleiche Werte wie dort)
 const STANDARD = {
     farben: { petrol: "#1e5a5a", text: "#222222", grau: "#555555", linie: "#dddddd", kasten: "#cccccc" },
-    seite: { rand_links: 60, rand_rechts: 60, rand_oben: 80, rand_unten: 60 },
+    seite: { rand_links: 60, rand_rechts: 60, rand_oben: 80, rand_unten: 75 },
     grundschrift: { groesse: 10, farbe: "text", zeilenhoehe: 1.25 },
     texte: {
         titel:          { groesse: 20, fett: true, farbe: "petrol", abstand_unten: 10 },
@@ -47,7 +47,7 @@ const STANDARD = {
     },
     freitext: { kasten_hoehe: 140, linienstaerke: 0.8, farbe: "kasten", abstand_oben: 14 },
     kopfzeile: { groesse: 8.5, farbe: "grau", logo_breite: 54, linie: { staerke: 0.6, farbe: "linie" } },
-    fusszeile: { groesse: 8.5, farbe: "grau", logo_hoehe: 20 }
+    fusszeile: { groesse: 8.5, farbe: "grau", logo_hoehe: 16, partner_hoehe: 16, partner_abstand: 12, rechts_abstand: 10, text_breite: 120, text_groesse: 7.5 }
 };
 
 const A4_BREITE = 595.28;   // pt
@@ -293,7 +293,7 @@ function einschaetzungBeschriftet(t) {
     return { columns: spalten, columnGap: 0, margin: [0, E.abstand_frage + 2, 0, 0] };
 }
 
-function dokumentBauen(teile, logoSvg, kopfzeile, foerderung) {
+function dokumentBauen(teile, logoSvg, kopfzeile, foerderung, partnerLogos) {
     const R          = STIL.seite;
     const SEITENRAND = [R.rand_links, R.rand_oben, R.rand_rechts, R.rand_unten];
     const BREITE     = A4_BREITE - R.rand_links - R.rand_rechts;   // nutzbare Breite
@@ -537,20 +537,56 @@ function dokumentBauen(teile, logoSvg, kopfzeile, foerderung) {
             ]
         }),
 
-        // Fußzeile: links GKV-Logo mit Förderhinweis, rechts "Seite X von Y"
-        footer: (seite, anzahl) => ({
-            margin: [SEITENRAND[0], 14, SEITENRAND[2], 0],
-            columnGap: 8,
-            columns: [
-                foerderung.logo
-                    ? { image: foerderung.logo, fit: [FZ.logo_hoehe * 3, FZ.logo_hoehe], width: "auto" }
-                    : { text: "", width: 0 },
-                { text: foerderung.text, width: "*", fontSize: FZ.groesse, color: farbe(FZ.farbe),
-                  margin: [0, (FZ.logo_hoehe - FZ.groesse * 1.25) / 2, 0, 0] },
-                { text: "Seite " + seite + " von " + anzahl, width: "auto", fontSize: FZ.groesse,
-                  color: farbe(FZ.farbe), margin: [0, (FZ.logo_hoehe - FZ.groesse * 1.25) / 2, 0, 0] }
-            ]
-        }),
+        // Fußzeile unter einer feinen Linie, in einer Zeile: links die Partner-Logos,
+        // rechts GKV-Logo, Förderhinweis als schmaler Textblock und "Seite X von Y";
+        // alles vertikal mittig.
+        footer: (seite, anzahl) => {
+            const textZeilenHoehe = FZ.text_groesse * 1.25 * 1.172;     // 1,172 = Zeilenhöhe Roboto
+            const text = foerderung.text ? umbrechen(foerderung.text, FZ.text_breite, FZ.text_groesse, false, true) : "";
+            const textZeilen = text ? 1 + text.reduce((n, st) => n + ((st.text || "").match(/\n/g) || []).length, 0) : 0;
+            const textHoehe = textZeilen * textZeilenHoehe;
+            const H = Math.max(FZ.partner_hoehe, foerderung.logo ? FZ.logo_hoehe : 0, textHoehe);
+            const mittig = (hoehe) => Math.max(0, (H - hoehe) / 2);
+
+            const seitenText = "Seite " + seite + " von " + anzahl;
+            const seitenHoehe = (FZ.groesse - 1) * 1.25 * 1.172;
+
+            // links: Partner-Logos als Gruppe (eigener Abstand)
+            const links = {
+                width: "auto",
+                columnGap: FZ.partner_abstand,
+                columns: partnerLogos.map((logo) => ({
+                    image: logo, fit: [FZ.partner_hoehe * 5, FZ.partner_hoehe], width: "auto",
+                    margin: [0, mittig(FZ.partner_hoehe), 0, 0]
+                }))
+            };
+
+            // rechts: GKV-Logo, Förderhinweis, Seitenzahl
+            const rechtsTeile = [];
+            if (foerderung.logo) {
+                rechtsTeile.push({ image: foerderung.logo, fit: [FZ.logo_hoehe * 3, FZ.logo_hoehe], width: "auto",
+                                   margin: [0, mittig(FZ.logo_hoehe), 0, 0] });
+            }
+            if (text) {
+                rechtsTeile.push({ text: text, width: FZ.text_breite, fontSize: FZ.text_groesse, color: farbe(FZ.farbe),
+                                   lineHeight: 1.25, margin: [0, mittig(textHoehe), 0, 0] });
+            }
+            rechtsTeile.push({ text: seitenText, width: "auto", noWrap: true,   // nie umbrechen
+                               fontSize: FZ.groesse - 1, color: farbe(FZ.farbe), margin: [0, mittig(seitenHoehe), 0, 0] });
+            const rechts = { width: "auto", columnGap: FZ.rechts_abstand, columns: rechtsTeile };
+
+            return {
+                margin: [SEITENRAND[0], 10, SEITENRAND[2], 0],
+                stack: [
+                    // feine graue Linie wie unter der Kopfzeile
+                    { canvas: [{ type: "line", x1: 0, y1: 0, x2: BREITE, y2: 0,
+                                 lineWidth: KZ.linie.staerke, lineColor: farbe(KZ.linie.farbe) }],
+                      margin: [0, 0, 0, 8] },
+                    // "*" in der Mitte schiebt die rechte Gruppe an den rechten Rand
+                    { columns: [links, { text: "", width: "*" }, rechts], columnGap: 0 }
+                ]
+            };
+        },
 
         content: inhalt,
 
@@ -571,7 +607,7 @@ function dokumentBauen(teile, logoSvg, kopfzeile, foerderung) {
 export function pdfErzeugen(teile, optionen) {
     namenSetzen(optionen.name);         // damit der Umbruch weiß, welche Wörter zum Namen gehören
     const doc = dokumentBauen(teile, optionen.logoSvg, optionen.kopfzeile || "",
-                              optionen.foerderung || { logo: null, text: "" });
+                              optionen.foerderung || { logo: null, text: "" }, optionen.partnerLogos || []);
     return new Promise((fertig, fehler) => {
         try {
             pdfMake.createPdf(doc).getBuffer((buffer) => fertig(new Uint8Array(buffer)));

@@ -14,6 +14,13 @@ kopfzeile: EditA – Evaluation digitaler Anwendungen in der Pflege
 # Unten links auf jeder PDF-Seite: GKV-Logo mit Förderhinweis (wie im Footer der Webseite)
 foerderlogo: /assets/images/gkv.png
 foerdertext: "Gefördert im Rahmen des Modellprogramms nach § 8 Abs. 3 SGB XI"
+
+# Partner-Logos in der Fußzeile jeder PDF-Seite, in dieser Reihenfolge
+partnerlogos:
+  - /assets/images/iat.png
+  - /assets/images/tu.png
+  - /assets/images/fr.webp
+  - /assets/images/ureka.png
 ---
 
 Hier können Sie sich einen individuellen Fragebogen zusammenstellen und als PDF herunterladen. Geben Sie den Namen der Technologie ein, die Sie evaluieren möchten. Die Vorschau zeigt sofort, wie der fertige Fragebogen aussieht.

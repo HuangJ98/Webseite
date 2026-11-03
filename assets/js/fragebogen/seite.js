@@ -30,8 +30,9 @@ const button     = document.getElementById("fragebogen-download");
 const status     = document.getElementById("fragebogen-status");
 
 let quelltext = "";         // Inhalt der Markdown-Datei
-let logoSvg = null;
-let foerderLogo = null;     // GKV-Logo als data:-Adresse (pdfmake braucht Bilder so)         // Inhalt der Logo-Datei
+let logoSvg = null;         // Inhalt der Logo-Datei (EditA, Kopfzeile)
+let foerderLogo = null;     // GKV-Logo als data:-Adresse (pdfmake braucht Bilder so)
+let partnerLogos = [];      // IAT, TU, Frankfurt, UREKA als data:-Adressen (Fußzeile)
 let geladen = false;        // erst true, wenn Markdown, Logo und Schrift da sind
 let vorschauDoc = null;     // aktuell angezeigtes PDF (pdf.js)
 let aktuelleSeite = 1;      // bleibt beim Tippen auf derselben Seite
@@ -77,12 +78,14 @@ function starten() {
         }),
         fetch(root.dataset.logo).then((r) => (r.ok ? r.text() : null)).catch(() => null),
         bildAlsDataUrl(root.dataset.foerderlogo),
+        Promise.all((root.dataset.partnerlogos || "").split("|").filter(Boolean).map(bildAlsDataUrl)),
         schriftLaden().catch((e) => console.warn("Schrift zum Messen nicht geladen, ohne Silbentrennung:", e))
     ])
-        .then(([md, svg, gkv]) => {
+        .then(([md, svg, gkv, partner]) => {
             quelltext = md;
             logoSvg = svg;
             foerderLogo = gkv;
+            partnerLogos = partner.filter(Boolean);    // fehlende Logos einfach weglassen
             geladen = true;
             input.disabled = false;
             breiteAlt = vorschau.clientWidth;
@@ -96,18 +99,26 @@ function starten() {
 }
 
 
-// Bild laden und als data:-Adresse zurückgeben (fehlt es, einfach ohne Bild weiter)
+// Bild laden und als PNG-data:-Adresse zurückgeben (fehlt es, einfach ohne Bild weiter).
+// Über ein Canvas umgewandelt, weil pdfmake nur PNG/JPEG kann (das Frankfurt-Logo ist WebP).
 function bildAlsDataUrl(adresse) {
     if (!adresse) return Promise.resolve(null);
-    return fetch(adresse)
-        .then((r) => (r.ok ? r.blob() : null))
-        .then((blob) => blob && new Promise((fertig) => {
-            const leser = new FileReader();
-            leser.onload = () => fertig(leser.result);
-            leser.onerror = () => fertig(null);
-            leser.readAsDataURL(blob);
-        }))
-        .catch(() => null);
+    return new Promise((fertig) => {
+        const bild = new Image();
+        bild.onload = () => {
+            try {
+                const canvas = document.createElement("canvas");
+                canvas.width  = bild.naturalWidth;
+                canvas.height = bild.naturalHeight;
+                canvas.getContext("2d").drawImage(bild, 0, 0);
+                fertig(canvas.toDataURL("image/png"));
+            } catch (e) {
+                fertig(null);
+            }
+        };
+        bild.onerror = () => fertig(null);
+        bild.src = adresse;
+    });
 }
 
 
@@ -123,6 +134,7 @@ function pdfFuer(name) {
         name: name,
         logoSvg: logoSvg,
         foerderung: { logo: foerderLogo, text: root.dataset.foerdertext || "" },
+        partnerLogos: partnerLogos,
         kopfzeile: root.dataset.kopfzeile
     });
 }

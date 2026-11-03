@@ -36,6 +36,7 @@
                  data-logo="{{ '/assets/images/logo.svg' | relative_url }}"
                  data-foerderlogo="{{ page.foerderlogo | relative_url }}"
                  data-foerdertext="{{ page.foerdertext | escape }}"
+                 data-partnerlogos="{% for logo in page.partnerlogos %}{{ logo | relative_url }}{% unless forloop.last %}|{% endunless %}{% endfor %}"
                  data-worker="{{ '/assets/js/vendor/pdf.worker.min.js' | relative_url }}">
 
             <!-- Eingabezeile (oben) -->

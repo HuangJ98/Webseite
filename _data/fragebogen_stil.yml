@@ -23,7 +23,7 @@ seite:
   rand_links:  60
   rand_rechts: 60
   rand_oben:   80     # Platz für die Kopfzeile
-  rand_unten:  60     # Platz für die Fußzeile
+  rand_unten:  75     # Platz für die Fußzeile (Partner-Logos + GKV-Zeile)
 
 
 # Schrift für alles, was unten nicht extra eingestellt ist
@@ -129,8 +129,14 @@ kopfzeile:
   linie: { staerke: 0.6, farbe: linie }
 
 
-# Fußzeile: links GKV-Logo mit Förderhinweis, rechts "Seite X von Y"
+# Fußzeile (eine Zeile): links Partner-Logos (Liste in pages/fragebogen.md),
+#           rechts GKV-Logo, Förderhinweis als Textblock und "Seite X von Y" (alles in einer Zeile)
 fusszeile:
   groesse: 8.5
   farbe: grau
-  logo_hoehe: 20      # Höhe des GKV-Logos unten links (Text daneben wird mittig ausgerichtet)
+  logo_hoehe: 16      # Höhe des GKV-Logos (links neben dem Förderhinweis)
+  partner_hoehe: 16   # Höhe der Partner-Logos
+  partner_abstand: 12 # Abstand zwischen den Partner-Logos
+  rechts_abstand: 10  # Abstand zwischen GKV-Logo, Förderhinweis und Seitenzahl
+  text_breite: 120    # Breite des Förderhinweises (bricht auf mehrere Zeilen um)
+  text_groesse: 7.5   # Schriftgröße des Förderhinweises
