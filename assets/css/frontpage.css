@@ -13,9 +13,13 @@
    1. HERO (BILD MIT TEXT)
    ========================================================= */
 
+/* Festes Seitenverhältnis statt fester Höhe: Bei jeder Fensterbreite ist genau derselbe
+   Bildausschnitt zu sehen. max-width begrenzt die Größe auf sehr breiten Bildschirmen. */
 .hero-image {
     position: relative;
-    height: 500px;
+    aspect-ratio: 12 / 5;
+    max-width: 1600px;
+    margin: 0 auto;
     overflow: hidden;
     background: var(--color-placeholder);
 }
@@ -80,15 +84,36 @@
     line-height: 1.6;
 }
 
+/* Tablet/Handy: Text passt nicht mehr auf das Bild -> Bild oben, Text darunter.
+   Das Bild behält denselben Ausschnitt. */
 @media (max-width: 900px) {
     .hero-image {
-        height: 300px;
+        aspect-ratio: auto;
+        overflow: visible;
+        background: none;
     }
-}
 
-@media (max-width: 700px) {
-    .hero-image {
-        height: 220px;
+    .hero-image > img {
+        height: auto;
+        aspect-ratio: 12 / 5;
+    }
+
+    .hero-content {
+        position: static;
+        display: block;
+        padding-block: 28px 8px;
+    }
+
+    .hero-text {
+        width: 100%;
+    }
+
+    .hero-text::before {
+        content: none;
+    }
+
+    .hero-content h1 {
+        font-size: 40px;
     }
 }
 
