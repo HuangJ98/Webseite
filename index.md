@@ -2,7 +2,7 @@
 layout: frontpage
 title: Kurzdarstellung
 
-hero_image: /assets/images/platzhalter.jpg
+hero_image: /assets/images/frontpage.jpg
 hero_label: ÜBER UNS
 hero_title: EditA
 hero_description: >
@@ -30,18 +30,20 @@ download_cards:
     text: >
       Hier steht ein kurzer Beschreibungstext für die erste Datei.
     file: /assets/downloads/datei-1.pdf
-    button: PDF herunterladen
+    gesperrt: true      # zum Freischalten diese Zeile löschen und "button" anpassen
+    button: Demnächst verfügbar
 
   - title: Fragebogen
     text: >
-      Hier steht ein kurzer Beschreibungstext für die zweite Datei.
-    file: /assets/downloads/datei-2.pdf
-    button: PDF herunterladen
+      Erstellen Sie hier einen individuellen Fragebogen für Ihre Technologie und laden Sie ihn als PDF herunter.
+    seite: /fragebogen/
+    button: Zum Fragebogen
 
   - title: Auswertung
     text: >
       Hier steht ein kurzer Beschreibungstext für die dritte Datei.
     file: /assets/downloads/datei-3.pdf
-    button: Excel herunterladen
+    gesperrt: true      # zum Freischalten diese Zeile löschen und "button" anpassen
+    button: Demnächst verfügbar
 ---
 

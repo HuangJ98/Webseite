@@ -11,7 +11,7 @@
 
 <div class="hero-image">
 
-    <img src="{{ '/assets/images/platzhalter.jpg' | relative_url }}" alt="">
+    <img src="{{ page.hero_image | relative_url }}" alt="">
 
     <div class="hero-content">
         <div class="site-container">
@@ -117,11 +117,24 @@
                 <!-- Button + optionaler Link darunter (link/link_text in index.md) -->
                 <div class="download-actions">
 
+                    <!-- In index.md: "gesperrt: true" = grauer Button ohne Funktion,
+                         "seite" = Button führt zu einer Seite, "file" = lädt eine Datei herunter -->
+                    {% if card.gesperrt %}
+                    <span class="hero-button download-button is-gesperrt" aria-disabled="true">
+                        {{ card.button | default: 'Kommt bald' }}
+                    </span>
+                    {% elsif card.seite %}
+                    <a class="hero-button download-button"
+                       href="{{ card.seite | relative_url }}">
+                        {{ card.button | default: 'Öffnen' }}
+                    </a>
+                    {% else %}
                     <a class="hero-button download-button"
                        href="{{ card.file | relative_url }}"
                        download>
                         {{ card.button | default: 'Herunterladen' }}
                     </a>
+                    {% endif %}
 
                     {% if card.link %}
                     <a class="download-link" href="{{ card.link | relative_url }}">

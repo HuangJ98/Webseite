@@ -23,8 +23,8 @@ projekt:
   strasse: Musterstraße 1
   ort: 12345 Musterstadt
   email: kontakt@example.org
-  # Link zur Anmeldung für die Mailingliste (PLATZHALTER)
-  mailingliste: https://example.org/mailingliste
+  # Link zur Anmeldung für die Mailingliste
+  mailingliste: https://www.listserv.dfn.de/sympa/info/edita-infos
   # Links unter "Kontakt" im Footer. Entweder eigene Seite (/impressum/)
   # oder ganze Adresse der Institution (https://...)
   impressum: /impressum/

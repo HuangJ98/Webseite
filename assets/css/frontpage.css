@@ -25,6 +25,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center 8%;     /* oberen Bildteil zeigen, damit die Köpfe sichtbar bleiben */
 }
 
 /* Text liegt über dem Bild */
@@ -36,7 +37,23 @@
 }
 
 .hero-text {
+    position: relative;
+    z-index: 0;                     /* damit die Fläche unten hinter dem Text, aber über dem Bild liegt */
     width: 37.5%;
+}
+
+/* Weiße Fläche mit runden, weich auslaufenden Kanten genau hinter dem Text.
+   Hängt am Textblock und passt sich seiner Größe an; das restliche Bild bleibt frei.
+   inset = wie weit sie über den Text hinausragt, blur = wie weich der Rand ausläuft. */
+.hero-text::before {
+    content: "";
+    position: absolute;
+    inset: -28px -36px;
+    z-index: -1;
+
+    background: rgba(255, 255, 255, 0.88);
+    border-radius: 48px;
+    filter: blur(20px);
 }
 
 .hero-label {
@@ -161,6 +178,14 @@
     align-items: flex-start;
     gap: 14px;
     margin-top: auto;
+}
+
+/* Gesperrter Button ("Kommt bald"): grau, ohne Funktion und ohne Hover-Effekt */
+.hero-button.is-gesperrt,
+.hero-button.is-gesperrt:hover {
+    background: var(--color-border);
+    color: var(--color-text-muted);
+    cursor: not-allowed;
 }
 
 /* Link unter dem Button, z. B. "Individuellen Fragebogen erstellen" */
