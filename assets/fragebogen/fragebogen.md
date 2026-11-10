@@ -24,6 +24,7 @@
     - Zahl: Frage                   kurze Schreiblinie für eine Zahl
     Skala: A | B | C | D | E        Beschriftung der 5er-Skala (vor den Aussagen)
     Skala: A | B || X | Y           "||" = hellgrauer senkrechter Strich an dieser Stelle
+    Satzanfang: Text …              steht im Tabellenkopf statt "Aussage" (für die nächste Tabelle)
     1. Aussage                      Aussage mit 5er-Skala, wird automatisch durchnummeriert
     ---                             Seitenumbruch: alles danach beginnt auf einer neuen Seite
     ### Offene Frage                Freitext-Frage, darunter ein Antwortkasten
@@ -37,7 +38,7 @@
 
 Bitte bilden Sie Ihren persönlichen Code. Er dient nur dazu, Ihre beiden Fragebögen einander zuzuordnen. Ihr Name wird nicht erfasst.
 
-- Zweiter Buchstabe des Vornamens Ihrer Mutter (Ist dieser nicht bekannt, verwenden Sie bitte den Vornamen Ihrer engsten Bezugsperson.), z. B. Maria: **A**
+- Zweiter Buchstabe des Vornamens Ihrer Mutter (Ist dieser nicht bekannt, verwenden Sie bitte den Vornamen Ihrer engsten Bezugsperson), z. B. Maria: **A**
 - Tag Ihres Geburtstags (zweistellig), z. B. 7. März: **07**
 - Erster Buchstabe Ihres Geburtsorts, z. B. Berlin: **B**
 
@@ -69,68 +70,85 @@ Ihr Code wäre in diesem Beispiel: **A07B**
 ## Anleitung
 In diesem Fragebogen geht es um NAME, also [kurze Beschreibung der Anwendung]. Bitte beziehen Sie alle Antworten nur auf NAME, nicht auf andere Technik in Ihrer Einrichtung.
 Denken Sie bei Ihren Antworten bitte an Ihre Arbeit in den letzten vier Wochen.
-Es gibt keine richtigen oder falschen Antworten. Uns interessiert Ihre persönliche Einschätzung. Wenn eine Aussage für NAME gar nicht passt, wählen Sie bitte „trifft auf NAME nicht zu“.
+Es gibt keine richtigen oder falschen Antworten. Uns interessiert Ihre persönliche Einschätzung. Wenn eine Aussage für NAME gar nicht passt, wählen Sie bitte „trifft auf NAME nicht zu“. Der Satzanfang im Kopf jeder Tabelle gilt für alle Aussagen im jeweiligen Block.
 
 
 Skala: Lehne vollständig ab | Lehne eher ab | teils / teils | Stimme eher zu | Stimme vollständig zu || trifft auf NAME nicht zu | kann ich nicht beurteilen
 
-## Wie wirk sich NAME auf ihre Arbei aus?
-1. NAME unterstützt mich dabei, meine Aufgaben zu priorisieren.
-1. Mit NAME kann ich selbst entscheiden, welchen Arbeitsschritt ich als Nächstes mache.
-1. Mit NAME kann ich meine Arbeitsaufgaben flexibel einteilen.
-1. NAME lässt mir Handlungsspielraum bei meiner Arbeit.
-1. NAME schränkt mich bei meiner Arbeit ein. 
-1. NAME unterstützt mich dabei, fachliche Entscheidungen im Versorgungsalltag zu treffen.
-1. NAME unterstützt mich dabei, Informationen mit Kolleg:innen auszutauschen.
+## Arbeitsqualität
 
---- 
+Satzanfang: NAME unterstützt mich dabei,…
 
-## Wie wirkt sich NAME auf Ihre Entlastung bei der Arbeit aus?
-1. NAME hilft mir, wiederkehrende Aufgaben schnell zu erledigen.
-1. NAME hilft mir bei schwierigen Aufgaben.
-1. NAME macht mir zusätzliche Arbeit. 
-1. Mit NAME muss ich nicht alles im Kopf behalten.
-1. NAME unterbricht häufig meinen Arbeitsablauf.
-1. NAME stellt mir Informationen übersichtlich bereit.
-1. Die Dokumentation mit NAME kostet mich viel Zeit. 
-1. NAME entlastet mich gedanklich bei meiner Arbeit.
-1. NAME liefert mir mehr Informationen, als ich verarbeiten kann. 
-1. NAME unterstützt mich bei körperlich anstrengenden Tätigkeiten.
-1. NAME erspart mir unnötige Wege bei der Arbeit.
-1. Mit NAME kann ich so arbeiten, wie ich es für richtig halte.
-1. Name spart mir Zeit, die ich für die direkte Versorgung nutzen kann.
+1. … zu erkennen, welche Aufgaben besonders wichtig sind.
+2. … selbst zu entscheiden, welchen Arbeitsschritt ich als Nächstes mache.
+3. … selbst zu bestimmen, wann ich einzelne Aufgaben erledige.
+4. … mich auf meine Kernaufgaben zu konzentrieren.
+5. … fachliche Entscheidungen im Versorgungsalltag zu treffen.
+6. … wichtige Informationen leichter zu finden.
+7. … wichtige Informationen mit Kolleg:innen schneller auszutauschen.
+8. … Fehler bei der Durchführung von Aufgaben zu vermeiden.
 
 ---
 
-## Wie wirkt sich NAME auf die Versorgung der Menschen aus, die Sie pflegen?
-1. NAME unterstützt mich dabei, auf pflegerelevante Informationen zuzugreifen.
-1. NAME unterstützt mich dabei, die Ressourcen versorgter Personen zu erkennen.
-1. NAME unterstützt mich dabei, pflegerelevante Risiken frühzeitig zu erkennen.
-1. NAME unterstützt mich dabei, pflegerische Maßnahmen an die individuellen Bedürfnisse versorgter Personen anzupassen.
-1. NAME unterstützt mich dabei, notwendige pflegerische Maßnahmen vollständig durchzuführen.
-1. NAME unterstützt mich dabei, pflegerische Maßnahmen rechtzeitig durchzuführen.
-1. Wenn ich NAME nutze, lenkt mich das von den versorgten Personen ab. 
-1. NAME trägt zur Sicherheit der versorgten Personen bei.
-1. NAME unterstützt mich dabei, die Wirksamkeit pflegerischer Maßnahmen zu beurteilen.
-1. NAME unterstützt mich dabei, pflegerelevante Informationen mit anderen Berufsgruppen auszutauschen.
-1. NAME unterstützt mich dabei, versorgten Personen pflegerelevante Informationen verständlich zu vermitteln.
-1. NAME unterstützt mich dabei, auf psychosoziale Bedürfnisse versorgter Personen einzugehen.
-1. NAME beeinträchtigt die Privatsphäre versorgter Personen. 
-1. NAME unterstützt mich dabei, versorgte Personen an Entscheidungen über ihre Versorgung zu beteiligen.
-1. NAME unterstützt mich dabei, die Selbstbestimmung versorgter Personen zu fördern.
-1. Insgesamt trägt NAME zu einer guten Qualität der pflegerischen Versorgung bei. 
+## Arbeitsanforderungen
+
+Wenn Sie an die Anforderungen bei Ihrer Arbeit mit NAME denken, inwieweit stimmen Sie den folgenden Aussagen zu?
+
+Satzanfang: Durch die Nutzung von NAME…
+
+9. … brauche ich weniger Zeit für wiederkehrende Aufgaben.
+10. … habe ich weniger Zeitdruck für andere Aufgaben.
+11. … fallen für mich zusätzliche Arbeitsschritte an.
+12. … muss ich mir weniger Informationen merken.
+13. … muss ich meine laufende Tätigkeit häufig unterbrechen.
+14. … muss ich weniger Informationen gleichzeitig verarbeiten.
+15. … brauche ich zusätzliche Zeit für Aufgaben.
+16. … kann ich nach Dienstende gedanklich von der Arbeit abschalten.
+17. … erhalte ich mehr Informationen, als ich unmittelbar verarbeiten kann.
+18. … muss ich mich bei meiner Arbeit körperlich weniger anstrengen.
+19. … muss ich bei meiner Arbeit weniger Wege zurücklegen.
+20. … habe ich mehr Zeit für die direkte Versorgung.
 
 ---
 
-## Wie erleben sie NAME selbst?
-1. NAME ist leicht zu erlernen.
-1. NAME ist einfach zu benutzen.
-1. Ich verliere zu viel Zeit durch technische Fehlfunktionen von NAME.
-1. Mit NAME kann ich meine Aufgaben effizient erledigen.
-1. Ich kann mich auf die Genauigkeit von NAME verlassen.
-1. Ich nutze NAME gerne.
-1. Insgesamt bin ich mit NAME zufrieden.
-1. Ich würde den Einsatz von NAME in der pflegerischen Versorgung weiterempfehlen.
+## Versorgungsqualität
+
+Wenn Sie an die Versorgung pflegebedürftiger Personen mit NAME denken, inwieweit stimmen Sie den folgenden Aussagen zu?
+
+Satzanfang: NAME unterstützt mich dabei,…
+
+21. … auf pflegerelevante Informationen zuzugreifen.
+22. … die Ressourcen versorgter Personen zu erkennen.
+23. … pflegerelevante Risiken frühzeitig zu erkennen.
+24. … pflegerische Maßnahmen an die individuellen Bedürfnisse versorgter Personen anzupassen.
+25. … notwendige pflegerische Maßnahmen vollständig durchzuführen.
+26. … pflegerische Maßnahmen rechtzeitig durchzuführen.
+27. … mich besser auf die versorgte Person zu konzentrieren.
+28. … zur Sicherheit der versorgten Personen beizutragen.
+29. … die Wirksamkeit pflegerischer Maßnahmen zu beurteilen.
+30. … pflegerelevante Informationen mit anderen Berufsgruppen auszutauschen.
+31. … versorgten Personen pflegerelevante Informationen verständlich zu vermitteln.
+32. … auf psychosoziale Bedürfnisse versorgter Personen einzugehen.
+33. … versorgte Personen an Entscheidungen über ihre Versorgung zu beteiligen.
+34. … die Selbstbestimmung versorgter Personen zu fördern.
+35. … insgesamt eine gute Qualität der pflegerischen Versorgung sicherzustellen.
+
+---
+
+## Technikakzeptanz
+
+Wenn Sie an den Umgang mit NAME und Ihre persönlichen Erfahrungen damit denken, inwieweit stimmen Sie den folgenden Aussagen zu?
+
+Satzanfang: In Bezug auf NAME…
+
+36. … fällt es mir leicht, den Umgang mit der Anwendung zu erlernen.
+37. … ist die Anwendung einfach zu benutzen.
+38. … verliere ich bei der Arbeit Zeit, wenn die Anwendung nicht richtig funktioniert.
+39. … kann ich meine Aufgaben mit der Anwendung effizient erledigen.
+40. … kann ich mich auf die Genauigkeit der Anwendung verlassen.
+41. … nutze ich die Anwendung gerne.
+42. … bin ich insgesamt mit der Anwendung zufrieden.
+43. … würde ich die Anwendung für den Einsatz in der pflegerischen Versorgung weiterempfehlen.
 
 ---
 

@@ -32,6 +32,7 @@ const STANDARD = {
         liste:          { groesse: 10, farbe: "text", abstand_oben: 4, abstand_unten: 6 },
         aussage:        { groesse: 10, farbe: "text" },
         tabellenkopf:   { groesse: 7.5, fett: true, farbe: "petrol", zeilenhoehe: 1.1 },
+        satzanfang:     { groesse: 10.5, fett: true, farbe: "petrol", zeilenhoehe: 1.2 },
         freitext_frage: { groesse: 11, fett: true, farbe: "petrol", abstand_unten: 4 }
     },
     kaestchen: { groesse: 10, linienstaerke: 0.8, farbe: "grau" },
@@ -410,7 +411,12 @@ function dokumentBauen(teile, logoSvg, kopfzeile, foerderung, partnerLogos) {
             const kopfZeilenHoehe = k.groesse * k.zeilenhoehe * 1.172;
             const kopfTexte = t.skala.map((s) => umbrechen(s, spalte, k.groesse, !!k.fett));
             const zeilenVon = (g) => 1 + g.reduce((summe, st) => summe + ((st.text || "").match(/\n/g) || []).length, 0);
-            const kopfHoehe = Math.max(1, Math.max.apply(null, kopfTexte.map(zeilenVon))) * kopfZeilenHoehe;
+            // erste Kopfspalte: gemeinsamer Satzanfang ("Satzanfang:" im Markdown) oder "Aussage"
+            //   (eigener, größerer Stil "satzanfang", damit er als Einleitung der Aussagen lesbar ist)
+            const sa = textStil("satzanfang");
+            const anfang = umbrechen(t.satzanfang || "Aussage", textSpalte, sa.groesse, !!sa.fett, true);
+            const anfangHoehe = zeilenVon(anfang) * sa.groesse * sa.zeilenhoehe * 1.172;
+            const kopfHoehe = Math.max(anfangHoehe, Math.max(1, Math.max.apply(null, kopfTexte.map(zeilenVon))) * kopfZeilenHoehe);
 
             // Senkrechter Trennstrich ("||" in der Skala). Wir zeichnen ihn selbst je Zeile,
             // 2 pt vor jeder waagerechten Linie endend, damit er diese nicht überdeckt.
@@ -424,7 +430,7 @@ function dokumentBauen(teile, logoSvg, kopfzeile, foerderung, partnerLogos) {
                            lineWidth: T.trennlinie.staerke, lineColor: farbe(T.trennlinie.farbe) }]
             });
 
-            const kopf = [{ text: "Aussage", style: "tabellenkopf", alignment: "left" }]
+            const kopf = [{ text: anfang, style: "satzanfang", alignment: "left" }]
                 .concat(kopfTexte.map((g, i) => {
                     const zelle = { text: g, style: "tabellenkopf" };
                     if (i + 1 !== trennSpalte) return zelle;

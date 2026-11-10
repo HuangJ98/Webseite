@@ -24,6 +24,7 @@
                                 "keine Angabe" am Ende: eigenes Kästchen, rechts abgesetzt
      Skala: A | B | C        -> Beschriftung für die folgenden Aussagen
      Skala: A | B || X | Y   -> "||" = hellgrauer senkrechter Strich an dieser Stelle der Tabelle
+     Satzanfang: Text …      -> steht im Tabellenkopf statt "Aussage" (gilt für die nächste Tabelle)
      1. Aussage              -> { typ: "likert", skala, aussagen: [...] }
                                 (Aussagen direkt hintereinander = eine Tabelle)
      ---                     -> { typ: "seitenumbruch" }  Rest beginnt auf neuer Seite
@@ -42,6 +43,7 @@ export function markdownLesen(md) {
     const teile = [];
     let skala = ["1", "2", "3", "4", "5"];
     let trennerNach = 0;      // Strich nach dieser Skalen-Spalte (0 = kein Strich)
+    let satzanfang = "";      // gemeinsamer Satzanfang für die nächste Aussagen-Tabelle
     let absatz = [];
 
     function absatzAbschliessen() {
@@ -85,6 +87,9 @@ export function markdownLesen(md) {
             const teilen = (x) => x.split("|").map((s) => s.trim()).filter(Boolean);
             skala = teilen(m[1].replace(/\|\|/g, "|"));
             trennerNach = gruppen.length > 1 ? teilen(gruppen[0]).length : 0;
+        } else if ((m = zeile.match(/^Satzanfang:\s*(.*)$/i))) {
+            absatzAbschliessen();
+            satzanfang = m[1].trim();
         } else if ((m = zeile.match(/^[-*]\s+Ja\s*\/\s*Nein:\s*(.*)$/i))) {
             absatzAbschliessen();
             teile.push({ typ: "janein", text: m[1] });
@@ -132,7 +137,8 @@ export function markdownLesen(md) {
             if (letztes && letztes.typ === "likert") {
                 letztes.aussagen.push(m[1]);
             } else {
-                teile.push({ typ: "likert", skala: skala, trennerNach: trennerNach, aussagen: [m[1]] });
+                teile.push({ typ: "likert", skala: skala, trennerNach: trennerNach, satzanfang: satzanfang, aussagen: [m[1]] });
+                satzanfang = "";        // gilt nur für diese eine Tabelle
             }
         } else if ((m = zeile.match(/^[-*•]\s+(.*)$/))) {
             absatzAbschliessen();

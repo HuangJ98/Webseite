@@ -46,6 +46,7 @@ texte:
                   # Abstand zwischen zwei Fragen = abstand_unten + abstand_oben (hier 18)
   aussage:        { groesse: 10,               farbe: text }
   tabellenkopf:   { groesse: 7.5, fett: true,  farbe: petrol, zeilenhoehe: 1.1 }
+  satzanfang:     { groesse: 10.5, fett: true, farbe: petrol, zeilenhoehe: 1.2 }   # "Satzanfang:" links im Tabellenkopf
   freitext_frage: { groesse: 11,  fett: true,  farbe: petrol, abstand_unten: 4 }
 
 
