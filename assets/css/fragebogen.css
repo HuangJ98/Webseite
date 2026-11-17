@@ -8,6 +8,25 @@
    ========================================================= */
 
 
+/* Hinweis auf den Onlinefragebogen: Satz, darunter der Button */
+.fragebogen-online {
+    margin-top: 8px;
+}
+
+.fragebogen-content .fragebogen-online p {
+    margin: 0 0 14px;
+}
+
+/* Nur für Screenreader ("öffnet in neuem Tab") */
+.fragebogen-content .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
 /* Generator darf breiter sein als normaler Lesetext */
 .fragebogen-content .site-container > .fragebogen-tool {
     max-width: 960px;

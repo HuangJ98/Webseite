@@ -24,6 +24,19 @@
         <!-- Einleitung aus pages/fragebogen.md -->
         {{ content }}
 
+        <!-- Hinweis auf den Onlinefragebogen (Text und Link in pages/fragebogen.md) -->
+        {% if page.online_link %}
+        <div class="fragebogen-online">
+            <p>{{ page.online_text }}</p>
+            <a class="hero-button fragebogen-online-button"
+               href="{{ page.online_link }}"
+               target="_blank" rel="noopener">
+                {{ page.online_button | default: 'Onlinefragebogen' }}
+                <span class="visually-hidden">(öffnet in neuem Tab)</span>
+            </a>
+        </div>
+        {% endif %}
+
         <!-- FRAGEBOGEN-GENERATOR
              Inhalt: assets/fragebogen/fragebogen.md, Einstellungen: pages/fragebogen.md.
              Die Logik steht in assets/js/fragebogen/ -->

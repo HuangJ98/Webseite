@@ -21,6 +21,11 @@ partnerlogos:
   - /assets/images/tu.png
   - /assets/images/fr.webp
   - /assets/images/ureka.png
+
+# Hinweis auf den Onlinefragebogen (unter dem Einleitungstext)
+online_text: "Wenn Sie lieber an einem Onlinefragebogen teilnehmen möchten, folgen Sie dem Link."
+online_button: Onlinefragebogen
+online_link: "https://umfragen-quality-group.qu.tu-berlin.de/473629?newtest=Y&lang=de"
 ---
 
 Hier können Sie sich einen individuellen Fragebogen zusammenstellen und als PDF herunterladen. Geben Sie den Namen der Technologie ein, die Sie evaluieren möchten. Die Vorschau zeigt sofort, wie der fertige Fragebogen aussieht.
