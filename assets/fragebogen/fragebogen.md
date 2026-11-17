@@ -72,7 +72,7 @@ Denken Sie bei Ihren Antworten bitte an Ihre Arbeit in den letzten vier Wochen.
 Es gibt keine richtigen oder falschen Antworten. Uns interessiert Ihre persönliche Einschätzung. Wenn eine Aussage für NAME gar nicht passt, wählen Sie bitte „trifft auf NAME nicht zu“.
 
 
-Skala: Lehne vollständig ab | Lehne eher ab | Teils / Teils | Stimme eher zu | Stimme vollständig zu || Trifft auf NAME nicht zu | Kann ich nicht beurteilen
+Skala: stimme überhaupt nicht zu | stimme eher nicht zu | teils / teils | stimme eher zu | stimme voll und ganz zu || trifft auf NAME nicht zu | kann ich nicht beurteilen
 
 ## Wie wirkt sich NAME auf Ihre Arbeit aus?
 1. NAME unterstützt mich dabei, zu erkennen, welche Aufgaben besonders wichtig sind.
